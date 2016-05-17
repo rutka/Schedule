@@ -3,10 +3,13 @@ package pl.edu.agh.schedule;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
 
 import com.estimote.sdk.Beacon;
 import com.estimote.sdk.BeaconManager;
@@ -34,6 +37,8 @@ public class MainActivity extends AppCompatActivity {
     private final static String UUID_STRING = "B9407F30-F5F8-466E-AFF9-25556B57FE6D";
     private static final Map<String, String> BEACONS_MAP;
 
+    private Button downloadButton;
+
     static {
         Map<String, String> map = new HashMap<>();
         map.put(String.format("%d:%d", MAJOR_BLUEBERRY, MINOR_BLUEBERRY), BLUEBERRY);
@@ -48,6 +53,17 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        downloadButton = (Button) findViewById(R.id.downloadButton);
+        downloadButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ProgressDialog progressDialog = new ProgressDialog(MainActivity.this);
+                progressDialog.setTitle("Download");
+                progressDialog.setMessage("Please wait...");
+                new DownloadTask(MainActivity.this, progressDialog).execute();
+            }
+        });
+
 
         beaconManager = new BeaconManager(this);
         beaconManager.setRangingListener(new BeaconManager.RangingListener() {
