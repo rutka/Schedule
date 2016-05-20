@@ -21,7 +21,6 @@ public class PageParser {
         return versionFileNameMap.get(max);
     }
 
-
     private Map<Integer, String> getFileNamesMap(String url){
         try {
             return createVersionFileNameMap(url);

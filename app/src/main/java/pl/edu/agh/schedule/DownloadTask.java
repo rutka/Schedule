@@ -30,7 +30,6 @@ public class DownloadTask extends AsyncTask<String, Integer, String> {
         this.progressDialog = progressDialog;
     }
 
-
     @Override
     protected String doInBackground(String... params) {
         return downloadFile();
@@ -55,13 +54,12 @@ public class DownloadTask extends AsyncTask<String, Integer, String> {
     protected void onPostExecute(String result) {
         progressDialog.dismiss();
         if (result != null) {
-            Toast.makeText(context, "Download error: " + result, Toast.LENGTH_LONG).show();
+            Toast.makeText(context,result, Toast.LENGTH_LONG).show();
             Log.e("ERROR", result);
         }
         else
             Toast.makeText(context,"File downloaded", Toast.LENGTH_SHORT).show();
     }
-
 
     private String downloadFile() {
         InputStream input = null;
@@ -79,23 +77,32 @@ public class DownloadTask extends AsyncTask<String, Integer, String> {
             }
 
             int fileLength = connection.getContentLength();
-            File path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
-            input = connection.getInputStream();
-            output = new FileOutputStream(path.getPath() + "/" + latestFileName);
 
-            byte data[] = new byte[4096];
-            long total = 0;
-            int count;
-            while ((count = input.read(data)) != -1) {
-                if (isCancelled()) {
-                    input.close();
-                    return null;
+            createFolder();
+            File file = new File(Environment.getExternalStorageDirectory() + "/MySchedule/" + latestFileName);
+            if(file.exists()) {
+                Log.d("DEBUG", "Brak aktualizacji");
+                return "Brak aktualizacji";
+            } else {
+                Log.d("DEBUG", "Pobieranie pliku: " + file.getPath());
+
+                input = connection.getInputStream();
+                output = new FileOutputStream(file.getPath());
+
+                byte data[] = new byte[4096];
+                long total = 0;
+                int count;
+                while ((count = input.read(data)) != -1) {
+                    if (isCancelled()) {
+                        input.close();
+                        return null;
+                    }
+                    total += count;
+
+                    if (fileLength > 0)
+                        publishProgress((int) (total * 100 / fileLength));
+                    output.write(data, 0, count);
                 }
-                total += count;
-
-                if (fileLength > 0)
-                    publishProgress((int) (total * 100 / fileLength));
-                output.write(data, 0, count);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -106,6 +113,14 @@ public class DownloadTask extends AsyncTask<String, Integer, String> {
             disconnect(connection);
         }
         return null;
+    }
+
+    private void createFolder() {
+        File folder = new File(Environment.getExternalStorageDirectory() + "/MySchedule");
+        if(!folder.exists()) {
+            Log.d("DEBUG", "Tworze folder: " + folder.getPath());
+            folder.mkdir();
+        }
     }
 
     private boolean isConnected(HttpURLConnection connection) throws IOException {
