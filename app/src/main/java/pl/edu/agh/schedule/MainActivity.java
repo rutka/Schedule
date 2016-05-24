@@ -77,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
                     String colour = getColour(nearestBeacon);
 //                    showNotification(colour, "beacon");
 
-                    List<Event> eventsById = calendarParser.getEventsById(UUID_STRING + String.format(":%d:%d", nearestBeacon.getMajor(), nearestBeacon.getMinor()));
+                    List<EventDTO> eventsById = calendarParser.getEventsById(UUID_STRING + String.format(":%d:%d", nearestBeacon.getMajor(), nearestBeacon.getMinor()));
                     Log.d("DEBUG", "size: " + String.valueOf(eventsById.size()));
 
                 }

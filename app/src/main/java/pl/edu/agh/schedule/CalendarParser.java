@@ -24,7 +24,7 @@ public class CalendarParser {
     private static final String PROPERTY_LOCATION_NAME = "LOCATION";
     private String beaconLocationFile;
     private Calendar calendar;
-    private Map<String,List<Event>> locationEventsMap;
+    private Map<String,List<EventDTO>> locationEventsMap;
     private Map<String, String> beaconLocationMap;
 
     public CalendarParser() {
@@ -47,17 +47,21 @@ public class CalendarParser {
         return builder.build(new FileInputStream(calendar));
     }
 
-    public List<Event> getEventsById(String id) {
+    public List<EventDTO> getEventsById(String id) {
         return getEventsByLocation(beaconLocationMap.get(id));
     }
 
-    private List<Event> getEventsByLocation(String location) {
+    private List<EventDTO> getEventsByLocation(String location) {
         Log.d("DEBUG", "sala: " + location);
-        return locationEventsMap.get(location);
+        if (location != null) {
+            return locationEventsMap.get(location);
+        } else {
+            return Collections.emptyList();
+        }
     }
 
-    private Map<String, List<Event>> getAllEvents() {
-        Map<String, List<Event>> locationListOfEventMap = new HashMap<>();
+    private Map<String, List<EventDTO>> getAllEvents() {
+        Map<String, List<EventDTO>> locationListOfEventMap = new HashMap<>();
         for (Object o : calendar.getComponents()) {
             Component component = (Component) o;
             if (component.getName().equals(EVENT_NAME)) {
@@ -67,12 +71,12 @@ public class CalendarParser {
                     Property property = (Property) o1;
                     propertiesMap.put(property.getName(), property.getValue());
                 }
-                Event event = new Event(propertiesMap);
+                EventDTO eventDTO = new EventDTO(propertiesMap);
                 if (locationListOfEventMap.containsKey(location)) {
-                    locationListOfEventMap.get(location).add(event);
+                    locationListOfEventMap.get(location).add(eventDTO);
                 } else {
-                    List<Event> list = new LinkedList<>();
-                    list.add(event);
+                    List<EventDTO> list = new LinkedList<>();
+                    list.add(eventDTO);
                     locationListOfEventMap.put(location, list);
                 }
             }
