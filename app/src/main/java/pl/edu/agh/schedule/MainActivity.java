@@ -3,11 +3,13 @@ package pl.edu.agh.schedule;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.net.ConnectivityManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
@@ -22,9 +24,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-
 public class MainActivity extends AppCompatActivity {
-
 
     private final static int MAJOR_MINT = 1148;
     private final static int MINOR_MINT = 14561;
@@ -48,22 +48,25 @@ public class MainActivity extends AppCompatActivity {
 
     private BeaconManager beaconManager;
     private Region region;
+    private NetworkReceiver receiver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        IntentFilter filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
+        receiver = new NetworkReceiver();
+        this.registerReceiver(receiver, filter);
+
         downloadButton = (Button) findViewById(R.id.downloadButton);
         downloadButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ProgressDialog progressDialog = new ProgressDialog(MainActivity.this);
-                progressDialog.setTitle("Download");
-                progressDialog.setMessage("Please wait...");
-                new DownloadTask(MainActivity.this, progressDialog).execute();
+                new DownloadTask(MainActivity.this).execute();
             }
         });
-
+        final CalendarParser calendarParser = new CalendarParser();
 
         beaconManager = new BeaconManager(this);
         beaconManager.setRangingListener(new BeaconManager.RangingListener() {
@@ -72,12 +75,14 @@ public class MainActivity extends AppCompatActivity {
                 if (!list.isEmpty()) {
                     Beacon nearestBeacon = list.get(0);
                     String colour = getColour(nearestBeacon);
+//                    showNotification(colour, "beacon");
 
-                    showNotification(colour, "beacon");
+                    List<Event> eventsById = calendarParser.getEventsById(UUID_STRING + String.format(":%d:%d", nearestBeacon.getMajor(), nearestBeacon.getMinor()));
+                    Log.d("DEBUG", "size: " + String.valueOf(eventsById.size()));
+
                 }
             }
         });
-
         region = new Region("ranged region", UUID.fromString(UUID_STRING), null, null);
 
     }
@@ -111,6 +116,14 @@ public class MainActivity extends AppCompatActivity {
         return beaconKey;
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (receiver != null) {
+            this.unregisterReceiver(receiver);
+        }
+    }
+
     public void showNotification(String title, String message) {
         Intent notifyIntent = new Intent(this, MainActivity.class);
         notifyIntent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
@@ -127,5 +140,4 @@ public class MainActivity extends AppCompatActivity {
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.notify(1, notification);
     }
-
 }

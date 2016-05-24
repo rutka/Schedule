@@ -9,41 +9,50 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 
-/**
- * Created by anna on 16.05.16.
- */
 public class PageParser {
-    private static String SCHEDULE_PREFIX = "schedule-v";
+    private static String URL  = "http://www.student.agh.edu.pl/~rutka/";
 
-    public String getLatestFileName(String url) {
-        Map<Integer, String> versionFileNameMap = getFileNamesMap(url);
+    private static String SCHEDULE_PREFIX = "schedule-v";
+    private static String SCHEDULE_EXTENSION = ".ics";
+    private static String BEACON_PREFIX = "beacons-v";
+    private static String BEACON_EXTENSION = ".csv";
+
+
+    public String getLatestBeaconFileName() {
+        Map<Integer, String> versionFileNameMap = getFileNamesMap(URL, BEACON_PREFIX, BEACON_EXTENSION);
         Integer max = Collections.max(versionFileNameMap.keySet());
         return versionFileNameMap.get(max);
     }
 
-    private Map<Integer, String> getFileNamesMap(String url){
+    public String getLatestScheduleFileName() {
+        Map<Integer, String> versionFileNameMap = getFileNamesMap(URL, SCHEDULE_PREFIX, SCHEDULE_EXTENSION);
+        Integer max = Collections.max(versionFileNameMap.keySet());
+        return versionFileNameMap.get(max);
+    }
+
+    private Map<Integer, String> getFileNamesMap(String url, String prefix,String extension){
         try {
-            return createVersionFileNameMap(url);
+            return createVersionFileNameMap(url, prefix, extension);
         } catch (IOException e) {
             e.printStackTrace();
         }
         return Collections.emptyMap();
     }
 
-    private Map<Integer, String> createVersionFileNameMap(String url) throws IOException {
+    private Map<Integer, String> createVersionFileNameMap(String url, String prefix, String extension) throws IOException {
         Map<Integer, String> versionMap = new HashMap<>();
         Document doc = Jsoup.connect(url).get();
         for (Element file : doc.select("td a")) {
             String fileName = file.attr("href");
-            if(fileName.startsWith(SCHEDULE_PREFIX)) {
-                versionMap.put(getVersion(fileName), fileName);
+            if(fileName.startsWith(prefix)) {
+                versionMap.put(getVersion(fileName, extension), fileName);
             }
         }
         return versionMap;
     }
 
-    private Integer getVersion(String fileName) {
-        String version = fileName.substring(fileName.indexOf("-v") + 2, fileName.indexOf(".ics"));
+    private Integer getVersion(String fileName, String extension) {
+        String version = fileName.substring(fileName.indexOf("-v") + 2, fileName.indexOf(extension));
         return Integer.valueOf(version);
     }
 }
