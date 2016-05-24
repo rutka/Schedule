@@ -29,15 +29,14 @@ public class CalendarParser {
 
     public CalendarParser() {
         beaconLocationFile = Environment.getExternalStorageDirectory() + "/MySchedule/beacons-v1.csv";// + pageParser.getLatestBeaconFileName();
+        // FIXME Possible solution to set default paths to v0 files, like this: context.getResources().openRawResource(R.raw.schedule_v0)
         String scheduleFileName = Environment.getExternalStorageDirectory() + "/MySchedule/schedule-v2.ics";// + pageParser.getLatestScheduleFileName();
         try {
             calendar = createCalendar(scheduleFileName);
 
             locationEventsMap = getAllEvents();
             beaconLocationMap = createBeaconLocationMap();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (ParserException e) {
+        } catch (IOException | ParserException e) {
             e.printStackTrace();
         }
     }
