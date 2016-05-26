@@ -1,6 +1,6 @@
 package pl.edu.agh.schedule;
 
-import android.os.Environment;
+import android.content.Context;
 import android.util.Log;
 
 import net.fortuna.ical4j.data.CalendarBuilder;
@@ -9,10 +9,9 @@ import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.Component;
 import net.fortuna.ical4j.model.Property;
 
-import java.io.BufferedReader;
-import java.io.FileInputStream;
-import java.io.FileReader;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
@@ -22,31 +21,46 @@ public class CalendarParser {
 
     private static final String EVENT_NAME = "VEVENT";
     private static final String PROPERTY_LOCATION_NAME = "LOCATION";
-    private String beaconLocationFile;
     private Calendar calendar;
     private Map<String,List<EventDTO>> locationEventsMap;
     private Map<String, String> beaconLocationMap;
 
-    public CalendarParser() {
-        beaconLocationFile = Environment.getExternalStorageDirectory() + "/MySchedule/beacons-v1.csv";// + pageParser.getLatestBeaconFileName();
-        // FIXME Possible solution to set default paths to v0 files, like this: context.getResources().openRawResource(R.raw.schedule_v0)
-        String scheduleFileName = Environment.getExternalStorageDirectory() + "/MySchedule/schedule-v2.ics";// + pageParser.getLatestScheduleFileName();
-        try {
-            calendar = createCalendar(scheduleFileName);
+    public CalendarParser(Context context) {
+        calendar = createCalendar(context);
+        BeaconParser beaconParser = new BeaconParser();
+        beaconLocationMap = beaconParser.createBeanLocationMap(context);
+        locationEventsMap = getAllEvents();
+    }
 
-            locationEventsMap = getAllEvents();
-            beaconLocationMap = createBeaconLocationMap();
+    private Calendar createCalendar(Context context) {
+        return buildCalender(context);
+    }
+
+    private Calendar buildCalender(Context context) {
+        CalendarBuilder builder = new CalendarBuilder();
+        try {
+            return builder.build(createInputStream(context));
         } catch (IOException | ParserException e) {
             e.printStackTrace();
         }
+        return null;
     }
 
-    public Calendar createCalendar(String calendar) throws IOException, ParserException {
-        CalendarBuilder builder = new CalendarBuilder();
-        return builder.build(new FileInputStream(calendar));
+    private InputStream createInputStream(Context context) {
+        InputStreamFactory inputStreamFactory = new InputStreamFactory();
+        try {
+            return inputStreamFactory.getSchedule(context);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
-    public List<EventDTO> getEventsById(String id) {
+    public List<EventDTO> getEventsByBeacon(String id) {
+        return getEventsByLocation(beaconLocationMap.get(id));
+    }
+
+    public List<EventDTO> getEventsByBeaconAndDate(String id, Date date) {
         return getEventsByLocation(beaconLocationMap.get(id));
     }
 
@@ -63,7 +77,7 @@ public class CalendarParser {
         Map<String, List<EventDTO>> locationListOfEventMap = new HashMap<>();
         for (Object o : calendar.getComponents()) {
             Component component = (Component) o;
-            if (component.getName().equals(EVENT_NAME)) {
+            if (isEvent(component)) {
                 Map<String, String> propertiesMap = new HashMap<>();
                 String location = component.getProperty(PROPERTY_LOCATION_NAME).getValue();
                 for (Object o1 : component.getProperties()) {
@@ -83,28 +97,7 @@ public class CalendarParser {
         return locationListOfEventMap;
     }
 
-    private Map<String, String> createBeaconLocationMap() {
-        Map<String, String> deviceList = new HashMap<>();
-
-        BufferedReader br = null;
-        String line = "";
-        try {
-            br = new BufferedReader(new FileReader(beaconLocationFile));
-            while ((line = br.readLine()) != null) {
-                String[] splitLine = line.split(",");
-                deviceList.put(splitLine[0], splitLine[1]);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            if (br != null) {
-                try {
-                    br.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-        return deviceList;
+    private boolean isEvent(Component component) {
+        return component.getName().equals(EVENT_NAME);
     }
 }

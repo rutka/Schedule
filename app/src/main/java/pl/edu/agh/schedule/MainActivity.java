@@ -63,10 +63,10 @@ public class MainActivity extends AppCompatActivity {
         downloadButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new DownloadTask(MainActivity.this).execute();
+//                new DownloadTask(MainActivity.this).execute();
             }
         });
-        final CalendarParser calendarParser = new CalendarParser();
+        final CalendarParser calendarParser = new CalendarParser(MainActivity.this);
 
         beaconManager = new BeaconManager(this);
         beaconManager.setRangingListener(new BeaconManager.RangingListener() {
@@ -77,10 +77,13 @@ public class MainActivity extends AppCompatActivity {
                     String colour = getColour(nearestBeacon);
 //                    showNotification(colour, "beacon");
 
-                    List<EventDTO> eventsById = calendarParser.getEventsById(UUID_STRING + String.format(":%d:%d", nearestBeacon.getMajor(), nearestBeacon.getMinor()));
+                    List<EventDTO> eventsById = calendarParser.getEventsByBeacon(UUID_STRING + String.format(":%d:%d", nearestBeacon.getMajor(), nearestBeacon.getMinor()));
                     Log.d("DEBUG", "size: " + String.valueOf(eventsById.size()));
 
                 }
+
+                List<EventDTO> eventsById = calendarParser.getEventsByBeacon("B9407F30-F5F8-466E-AFF9-25556B57FE6D:1148:14561");
+                Log.d("DEBUG", "size: " + String.valueOf(eventsById.size()));
             }
         });
         region = new Region("ranged region", UUID.fromString(UUID_STRING), null, null);
@@ -90,9 +93,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-
         SystemRequirementsChecker.checkWithDefaultDialogs(this);
-
         beaconManager.connect(new BeaconManager.ServiceReadyCallback() {
             @Override
             public void onServiceReady() {

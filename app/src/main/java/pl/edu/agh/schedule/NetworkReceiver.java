@@ -17,7 +17,9 @@ public class NetworkReceiver extends BroadcastReceiver {
 
         if (networkInfo != null && networkInfo.getType() == ConnectivityManager.TYPE_WIFI) {
             Toast.makeText(context, "Network is available", Toast.LENGTH_SHORT).show();
-            new DownloadTask(context).execute();
+
+            new DownloadTask(context, "beacon").execute();
+            new DownloadTask(context, "schedule").execute();
 
         } else {
             Toast.makeText(context, "Lost connection", Toast.LENGTH_SHORT).show();

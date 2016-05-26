@@ -1,9 +1,10 @@
 package pl.edu.agh.schedule;
 
-import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Environment;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -17,14 +18,15 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 public class DownloadTask extends AsyncTask<String, Integer, AsyncTaskResult> {
-    private static String URL  = "http://www.student.agh.edu.pl/~rutka/";
+    private static String URL = "http://www.student.agh.edu.pl/~rutka/";
+    private final String type;
 
-    private static String SCHEDULE_PREFIX = "schedule-v";
-    private static String BEACON_PREFIX = "beacons-v";
     private Context context;
 
-    public DownloadTask(Context context) {
+    public DownloadTask(Context context, String type) {
+
         this.context = context;
+        this.type = type;
     }
 
     @Override
@@ -35,28 +37,43 @@ public class DownloadTask extends AsyncTask<String, Integer, AsyncTaskResult> {
             return new AsyncTaskResult(error);
         }
     }
+
     protected void onPostExecute(AsyncTaskResult result) {
         //todo poprawic wyswitlanie sie wiadomosci koncowej
-        if ( result.getError() != null ) {
+        if (result.getError() != null) {
             Toast.makeText(context, "Błąd: " + result.getError(), Toast.LENGTH_LONG).show();
-        }  else if ( isCancelled()) {
+            result.getError().printStackTrace();
+        } else if (isCancelled()) {
             Toast.makeText(context, "Przerwano pobieranie aktualizacji", Toast.LENGTH_LONG).show();
         } else {
-            Toast.makeText(context, result.getResult(), Toast.LENGTH_LONG).show();
+            String realResult = result.getResult();
+            savePreferences(realResult);
+            Toast.makeText(context, "File " + realResult + " downloaded", Toast.LENGTH_LONG).show();
         }
-    };
+    }
+
+    private void savePreferences(String fileName) {
+
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        if (fileName.contains("schedule")) {
+            editor.putString("schedule", fileName);
+            editor.commit();
+        } else if(fileName.contains("beacon")) {
+            editor.putString("beacon", fileName);
+            editor.commit();
+        }
+    }
 
     private String downloadFile() throws IOException {
         InputStream input = null;
         OutputStream output = null;
         HttpURLConnection connection = null;
         PageParser pageParser = new PageParser();
-        String latestBeaconFileName = pageParser.getLatestBeaconFileName();
-        // todo pobieranie planu zajec
-        String latestScheduleFileName = pageParser.getLatestScheduleFileName();
+        String latestFileName = pageParser.getLatestFileName(type);
         try {
 
-            connection = connect(latestBeaconFileName);
+            connection = connect(latestFileName);
 
             if (!isConnected(connection)) {
                 throw new IllegalStateException("Brak połączenia " + connection.getResponseCode()
@@ -64,13 +81,13 @@ public class DownloadTask extends AsyncTask<String, Integer, AsyncTaskResult> {
             }
             int fileLength = connection.getContentLength();
             createFolder();
-            File file = new File(Environment.getExternalStorageDirectory() + "/MySchedule/" + latestBeaconFileName);
+            File file = new File(Environment.getExternalStorageDirectory() + "/MySchedule/" + latestFileName);
             Log.d("DEBUG", file.getPath());
-            if(file.exists()) {
+            if (file.exists()) {
                 Log.d("DEBUG", "Brak aktualizacji");
                 return "Brak aktualizacji";
             } else {
-                Log.d("DEBUG", "Pobieranie pliku: " + file.getPath());
+                Log.d("DEBUG", "Downloading file: " + file.getPath());
 
                 input = connection.getInputStream();
                 output = new FileOutputStream(file.getPath());
@@ -95,12 +112,12 @@ public class DownloadTask extends AsyncTask<String, Integer, AsyncTaskResult> {
             closeStream(input);
             disconnect(connection);
         }
-        return "File " + latestBeaconFileName + " downloaded";
+        return latestFileName;
     }
 
     private void createFolder() {
         File folder = new File(Environment.getExternalStorageDirectory() + "/MySchedule");
-        if(!folder.exists()) {
+        if (!folder.exists()) {
             Log.d("DEBUG", "Create dir: " + folder.getPath());
             folder.mkdir();
         }

@@ -12,20 +12,19 @@ import org.jsoup.nodes.Element;
 public class PageParser {
     private static String URL  = "http://www.student.agh.edu.pl/~rutka/";
 
-    private static String SCHEDULE_PREFIX = "schedule-v";
+    private static String SCHEDULE_PREFIX = "schedule_v";
     private static String SCHEDULE_EXTENSION = ".ics";
-    private static String BEACON_PREFIX = "beacons-v";
+    private static String BEACON_PREFIX = "beacons_v";
     private static String BEACON_EXTENSION = ".csv";
 
 
-    public String getLatestBeaconFileName() {
-        Map<Integer, String> versionFileNameMap = getFileNamesMap(URL, BEACON_PREFIX, BEACON_EXTENSION);
-        Integer max = Collections.max(versionFileNameMap.keySet());
-        return versionFileNameMap.get(max);
-    }
-
-    public String getLatestScheduleFileName() {
-        Map<Integer, String> versionFileNameMap = getFileNamesMap(URL, SCHEDULE_PREFIX, SCHEDULE_EXTENSION);
+    public String getLatestFileName(String type) {
+        Map<Integer, String> versionFileNameMap;
+        if(BEACON_PREFIX.contains(type)) {
+            versionFileNameMap = getFileNamesMap(URL, BEACON_PREFIX, BEACON_EXTENSION);
+        } else {
+            versionFileNameMap = getFileNamesMap(URL, SCHEDULE_PREFIX, SCHEDULE_EXTENSION);
+        }
         Integer max = Collections.max(versionFileNameMap.keySet());
         return versionFileNameMap.get(max);
     }
@@ -52,7 +51,7 @@ public class PageParser {
     }
 
     private Integer getVersion(String fileName, String extension) {
-        String version = fileName.substring(fileName.indexOf("-v") + 2, fileName.indexOf(extension));
+        String version = fileName.substring(fileName.indexOf("_v") + 2, fileName.indexOf(extension));
         return Integer.valueOf(version);
     }
 }
