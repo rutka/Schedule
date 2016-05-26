@@ -18,7 +18,10 @@ import com.estimote.sdk.BeaconManager;
 import com.estimote.sdk.Region;
 import com.estimote.sdk.SystemRequirementsChecker;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -82,8 +85,18 @@ public class MainActivity extends AppCompatActivity {
 
                 }
 
+                SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+                Date date = new Date();
+                try {
+                     date = sdf.parse("16-10-2015");
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+
                 List<EventDTO> eventsById = calendarParser.getEventsByBeacon("B9407F30-F5F8-466E-AFF9-25556B57FE6D:1148:14561");
+                List<EventDTO> eventsByIdAndDate = calendarParser.getEventsByBeaconAndDate("B9407F30-F5F8-466E-AFF9-25556B57FE6D:1148:14561", date);
                 Log.d("DEBUG", "size: " + String.valueOf(eventsById.size()));
+                Log.d("DEBUG", "size beacon date: " + String.valueOf(eventsByIdAndDate.size()));
             }
         });
         region = new Region("ranged region", UUID.fromString(UUID_STRING), null, null);

@@ -61,7 +61,13 @@ public class CalendarParser {
     }
 
     public List<EventDTO> getEventsByBeaconAndDate(String id, Date date) {
-        return getEventsByLocation(beaconLocationMap.get(id));
+        List<EventDTO> eventDTOList = new LinkedList<>();
+        for (EventDTO eventDTO : getEventsByBeacon(id)) {
+            if(eventDTO.getDateList().contains(date)) {
+                eventDTOList.add(eventDTO);
+            }
+        }
+        return eventDTOList;
     }
 
     private List<EventDTO> getEventsByLocation(String location) {

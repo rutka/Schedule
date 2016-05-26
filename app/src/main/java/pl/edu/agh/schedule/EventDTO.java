@@ -1,4 +1,16 @@
 package pl.edu.agh.schedule;
+import net.fortuna.ical4j.model.DateList;
+import net.fortuna.ical4j.model.DateTime;
+import net.fortuna.ical4j.model.Recur;
+import net.fortuna.ical4j.model.parameter.Value;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Collections;
+import java.util.Date;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 public class EventDTO {
@@ -7,7 +19,9 @@ public class EventDTO {
     private String endTime;
     private String summary;
     private String location;
+    private String rule;
     private Map<String, String> propertiesMap;
+    private List<Date> dateList = Collections.emptyList();
 
     public EventDTO(Map<String, String> map) {
         this.propertiesMap = map;
@@ -19,6 +33,14 @@ public class EventDTO {
         endTime = propertiesMap.get("DTEND");
         summary = propertiesMap.get("SUMMARY");
         location = propertiesMap.get("LOCATION");
+        rule = propertiesMap.get("RRULE");
+        try {
+            Recur recur = new Recur(rule);
+            DateList dateList = recur.getDates(new DateTime(startTime), new DateTime(startTime), recur.getUntil(), Value.DATE_TIME);
+            this.dateList = convert(dateList);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
     }
 
     public Map<String, String> getPropertiesMap() {
@@ -34,11 +56,11 @@ public class EventDTO {
     @Override
     public String toString() {
         return "EventDTO{" +
-                "location='" + location + '\'' +
+                "startTime='" + startTime + '\'' +
+                ", endTime='" + endTime + '\'' +
                 ", summary='" + summary + '\'' +
-                ", endDate=" + endTime +
-                ", startDate=" + startTime +
-                '}';
+                ", location='" + location + '\'' +
+                ", rule='" + rule;
     }
 
     public String getStartTime() {
@@ -71,5 +93,37 @@ public class EventDTO {
 
     public void setLocation(String location) {
         this.location = location;
+    }
+
+    public String getRule() {
+        return rule;
+    }
+
+    public void setRule(String rule) {
+        this.rule = rule;
+    }
+
+    public List<Date> getDateList() {
+        return dateList;
+    }
+
+    public void setDateList(List<Date> dateList) {
+        this.dateList = dateList;
+    }
+
+    private List<Date> convert(DateList dateList) {
+        List<Date> list = new LinkedList<>();
+        Iterator iterator = dateList.iterator();
+        SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd");
+
+        while (iterator.hasNext()){
+            DateTime element = (DateTime) iterator.next();
+            try {
+                list.add(format.parse(element.toString().substring(0, 8)));
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        }
+        return list;
     }
 }
