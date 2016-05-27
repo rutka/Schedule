@@ -22,6 +22,7 @@ public class EventDTO {
     private String rule;
     private Map<String, String> propertiesMap;
     private List<Date> dateList = Collections.emptyList();
+    private String description;
 
     public EventDTO(Map<String, String> map) {
         this.propertiesMap = map;
@@ -34,6 +35,7 @@ public class EventDTO {
         summary = propertiesMap.get("SUMMARY");
         location = propertiesMap.get("LOCATION");
         rule = propertiesMap.get("RRULE");
+        description = propertiesMap.get("DESCRIPTION");
         try {
             Recur recur = new Recur(rule);
             DateList dateList = recur.getDates(new DateTime(startTime), new DateTime(startTime), recur.getUntil(), Value.DATE_TIME);
@@ -60,6 +62,7 @@ public class EventDTO {
                 ", endTime='" + endTime + '\'' +
                 ", summary='" + summary + '\'' +
                 ", location='" + location + '\'' +
+                ", description='" + description + '\'' +
                 ", rule='" + rule;
     }
 
@@ -125,5 +128,13 @@ public class EventDTO {
             }
         }
         return list;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 }
