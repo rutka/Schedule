@@ -12,12 +12,19 @@ import net.fortuna.ical4j.model.Property;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
-import java.util.*;
+
+import pl.edu.agh.schedule.util.LogUtils;
+import pl.edu.agh.schedule.util.TimeUtils;
 
 public class CalendarParser {
+
+    private static final String TAG = LogUtils.makeLogTag(CalendarParser.class);
 
     private static final String EVENT_NAME = "VEVENT";
     private static final String PROPERTY_LOCATION_NAME = "LOCATION";
@@ -61,6 +68,8 @@ public class CalendarParser {
     }
 
     public List<EventDTO> getEventsByBeaconAndDate(String id, Date date) {
+        date = TimeUtils.toShortDate(date);
+        Log.d(TAG, "Looking for events for beacon " + id + " and date " + date);
         List<EventDTO> eventDTOList = new LinkedList<>();
         for (EventDTO eventDTO : getEventsByBeacon(id)) {
             if(eventDTO.getDateList().contains(date)) {
