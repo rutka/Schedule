@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+   Copyright 2015 Google Inc. All rights reserved.
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+-->
+<!-- This layout is added to most layouts throughout the app using include directives in Activities'
+     XML layouts. Google Account and Navigation Item lists are populated through BaseActivity code.
+     -->
+<pl.edu.agh.schedule.ui.widget.ScrimInsetsScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/navdrawer"
+    android:layout_width="@dimen/navdrawer_width"
+    android:layout_height="match_parent"
+    android:layout_gravity="start"
+    android:background="@color/navdrawer_background"
+    android:fitsSystemWindows="true"
+    app:appInsetForeground="#4000">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <FrameLayout
+            android:id="@+id/chosen_account_view"
+            android:layout_width="match_parent"
+            android:layout_height="140dp"
+            android:foreground="?photoItemForeground">
+
+            <ImageView
+                android:id="@+id/profile_cover_image_placeholder"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingTop="@dimen/navdrawer_logo_vertical_padding"
+                android:paddingBottom="@dimen/navdrawer_logo_vertical_padding"
+                android:scaleType="center"
+                android:background="?colorPrimary"
+                android:src="@drawable/logo_ki"/>
+
+        </FrameLayout>
+
+        <FrameLayout android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <!-- Account items -->
+            <LinearLayout
+                android:id="@+id/account_list"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/navview_account_list_top_padding"
+                android:orientation="vertical"
+                android:visibility="invisible" />
+
+            <!-- Drawer items -->
+            <LinearLayout
+                android:id="@+id/navdrawer_items_list"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/navview_menu_item_top_bottom_padding"
+                android:layout_marginBottom="@dimen/navview_menu_item_top_bottom_padding"
+                android:orientation="vertical" />
+        </FrameLayout>
+    </LinearLayout>
+</pl.edu.agh.schedule.ui.widget.ScrimInsetsScrollView>

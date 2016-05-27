@@ -17,6 +17,8 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+import pl.edu.agh.schedule.util.ConstUtils;
+
 public class DownloadTask extends AsyncTask<String, Integer, AsyncTaskResult> {
     private static String URL = "http://www.student.agh.edu.pl/~rutka/";
     private final String type;
@@ -46,8 +48,10 @@ public class DownloadTask extends AsyncTask<String, Integer, AsyncTaskResult> {
         } else if (isCancelled()) {
             Toast.makeText(context, "Przerwano pobieranie aktualizacji", Toast.LENGTH_LONG).show();
         } else {
+            result.notifyObserver();
             String realResult = result.getResult();
             savePreferences(realResult);
+            //FIXME saving not found file
             Toast.makeText(context, "File " + realResult + " downloaded", Toast.LENGTH_LONG).show();
         }
     }
@@ -56,12 +60,12 @@ public class DownloadTask extends AsyncTask<String, Integer, AsyncTaskResult> {
 
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
         SharedPreferences.Editor editor = sharedPreferences.edit();
-        if (fileName.contains("schedule")) {
-            editor.putString("schedule", fileName);
-            editor.commit();
-        } else if(fileName.contains("beacon")) {
-            editor.putString("beacon", fileName);
-            editor.commit();
+        if (fileName.contains(ConstUtils.SCHEDULE)) {
+            editor.putString(ConstUtils.SCHEDULE, fileName);
+            editor.apply();
+        } else if(fileName.contains(ConstUtils.BEACON)) {
+            editor.putString(ConstUtils.BEACON, fileName);
+            editor.apply();
         }
     }
 

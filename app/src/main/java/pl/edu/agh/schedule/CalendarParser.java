@@ -33,6 +33,10 @@ public class CalendarParser {
     private Map<String, String> beaconLocationMap;
 
     public CalendarParser(Context context) {
+        init(context);
+    }
+
+    public void init(Context context) {
         calendar = createCalendar(context);
         BeaconParser beaconParser = new BeaconParser();
         beaconLocationMap = beaconParser.createBeanLocationMap(context);
@@ -71,9 +75,12 @@ public class CalendarParser {
         date = TimeUtils.toShortDate(date);
         Log.d(TAG, "Looking for events for beacon " + id + " and date " + date);
         List<EventDTO> eventDTOList = new LinkedList<>();
-        for (EventDTO eventDTO : getEventsByBeacon(id)) {
-            if(eventDTO.getDateList().contains(date)) {
-                eventDTOList.add(eventDTO);
+        List<EventDTO> eventsByBeacon = getEventsByBeacon(id);
+        if (eventsByBeacon != null) {
+            for (EventDTO eventDTO : eventsByBeacon) {
+                if (eventDTO.getDateList().contains(date)) {
+                    eventDTOList.add(eventDTO);
+                }
             }
         }
         return eventDTOList;
