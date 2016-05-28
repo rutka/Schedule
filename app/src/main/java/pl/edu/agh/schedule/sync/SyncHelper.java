@@ -19,6 +19,7 @@ public class SyncHelper {
     private static final String TAG = makeLogTag(SyncHelper.class);
 
     private Context mContext;
+    private SyncStatusObserver syncStatusObserver;
 
     /**
      * @param context            Can be Application, Activity or Service context.
@@ -26,6 +27,7 @@ public class SyncHelper {
      */
     public SyncHelper(Context context, SyncStatusObserver syncStatusObserver) {
         this.mContext = context;
+        this.syncStatusObserver = syncStatusObserver;
         AsyncTaskResult.setObserver(syncStatusObserver);
         this.performSync();
     }
@@ -37,6 +39,8 @@ public class SyncHelper {
         try {
             if (!isOnline()) {
                 Log.d(TAG, "Not attempting remote sync because device is OFFLINE");
+                syncStatusObserver.onStatusChanged(0);
+                return;
             }
             Log.d(TAG, "Starting remote sync.");
             new DownloadTask(mContext, ConstUtils.BEACON).execute();
