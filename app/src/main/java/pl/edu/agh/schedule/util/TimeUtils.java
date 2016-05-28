@@ -34,7 +34,7 @@ public class TimeUtils {
             try {
                 return format.parse(timestamp);
             } catch (ParseException ex) {
-                continue;
+                // NO OP
             }
         }
 

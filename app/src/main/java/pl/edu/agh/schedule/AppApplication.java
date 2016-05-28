@@ -2,8 +2,6 @@ package pl.edu.agh.schedule;
 
 import android.app.Application;
 
-import pl.edu.agh.schedule.settings.SettingsUtils;
-
 /**
  * Code initialized in
  * Application classes is rare since this code will be run any time a ContentProvider, Activity,
@@ -15,6 +13,5 @@ public class AppApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        SettingsUtils.markDeclinedWifiSetup(getApplicationContext(), false);
     }
 }

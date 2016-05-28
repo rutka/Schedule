@@ -3,7 +3,6 @@ package pl.edu.agh.schedule.sync;
 import android.content.Context;
 import android.content.SyncStatusObserver;
 import android.net.ConnectivityManager;
-import android.os.Handler;
 import android.util.Log;
 
 import pl.edu.agh.schedule.AsyncTaskResult;
@@ -17,8 +16,6 @@ import static pl.edu.agh.schedule.util.LogUtils.makeLogTag;
  */
 public class SyncHelper {
 
-    private static final long INTERVAL_TO_AUTO_REFRESH = 60000L;
-
     private static final String TAG = makeLogTag(SyncHelper.class);
 
     private Context mContext;
@@ -30,7 +27,7 @@ public class SyncHelper {
     public SyncHelper(Context context, SyncStatusObserver syncStatusObserver) {
         this.mContext = context;
         AsyncTaskResult.setObserver(syncStatusObserver);
-        new UpdateScheduler(this).run();
+        this.performSync();
     }
 
     /**
@@ -42,7 +39,6 @@ public class SyncHelper {
                 Log.d(TAG, "Not attempting remote sync because device is OFFLINE");
             }
             Log.d(TAG, "Starting remote sync.");
-            // FIXME
             new DownloadTask(mContext, ConstUtils.BEACON).execute();
             new DownloadTask(mContext, ConstUtils.SCHEDULE).execute();
         } catch (Throwable throwable) {
@@ -57,28 +53,5 @@ public class SyncHelper {
                 Context.CONNECTIVITY_SERVICE);
         return cm.getActiveNetworkInfo() != null &&
                 cm.getActiveNetworkInfo().isConnectedOrConnecting();
-    }
-
-    final class UpdateScheduler implements Runnable {
-        private final Handler handler = new Handler();
-        private SyncHelper syncHelper;
-
-        public UpdateScheduler(SyncHelper syncHelper) {
-            this.syncHelper = syncHelper;
-        }
-
-        public void scheduleNextRun() {
-            handler.postDelayed(this, INTERVAL_TO_AUTO_REFRESH);
-        }
-
-        @Override
-        public void run() {
-            Log.d(TAG, "Running auto update.");
-            try {
-                syncHelper.performSync();
-            } finally {
-                this.scheduleNextRun();
-            }
-        }
     }
 }
