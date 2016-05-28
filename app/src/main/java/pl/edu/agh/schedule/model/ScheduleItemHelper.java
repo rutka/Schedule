@@ -8,6 +8,7 @@ import java.util.Comparator;
 import java.util.List;
 
 import pl.edu.agh.schedule.util.LogUtils;
+import pl.edu.agh.schedule.util.TimeUtils;
 
 public class ScheduleItemHelper {
 
@@ -24,7 +25,7 @@ public class ScheduleItemHelper {
         Collections.sort(result, new Comparator<ScheduleItem>() {
             @Override
             public int compare(ScheduleItem lhs, ScheduleItem rhs) {
-                return lhs.startTime < rhs.startTime ? -1 : 1;
+                return TimeUtils.compareHours(lhs.startTime, rhs.startTime);
             }
         });
 

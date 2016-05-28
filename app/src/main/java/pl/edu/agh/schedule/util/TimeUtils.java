@@ -5,6 +5,7 @@ import android.text.TextUtils;
 import android.text.format.DateUtils;
 
 import org.joda.time.DateTime;
+import org.joda.time.DateTimeComparator;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -80,6 +81,10 @@ public class TimeUtils {
         // Android DateFormatter will honor the user's current settings.
         DateFormat format = android.text.format.DateFormat.getTimeFormat(context);
         return format.format(time);
+    }
+
+    public static int compareHours(long day1, long day2) {
+        return DateTimeComparator.getTimeOnlyInstance().compare(day1, day2);
     }
 
 }
