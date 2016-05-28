@@ -42,6 +42,7 @@ public class SyncHelper {
                 Log.d(TAG, "Not attempting remote sync because device is OFFLINE");
             }
             Log.d(TAG, "Starting remote sync.");
+            // FIXME
             new DownloadTask(mContext, ConstUtils.BEACON).execute();
             new DownloadTask(mContext, ConstUtils.SCHEDULE).execute();
         } catch (Throwable throwable) {

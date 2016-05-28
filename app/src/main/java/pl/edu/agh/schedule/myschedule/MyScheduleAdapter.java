@@ -131,7 +131,10 @@ public class MyScheduleAdapter implements ListAdapter, AbsListView.RecyclerListe
     }
 
     private String formatDescription(ScheduleItem item) {
-        return item.description.substring(0, 20);
+        if(item.description.length() > 20) {
+            return item.description.substring(0, 20);
+        }
+        return item.description;
     }
 
     private View.OnClickListener mUriOnClickListener = new View.OnClickListener() {
