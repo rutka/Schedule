@@ -11,18 +11,16 @@ import org.jsoup.nodes.Element;
 
 public class PageParser {
 
-    private static final String SCHEDULE_PREFIX = "schedule_v";
     private static final String SCHEDULE_EXTENSION = ".ics";
-    private static final String BEACON_PREFIX = "beacons_v";
     private static final String BEACON_EXTENSION = ".csv";
-
+    private static final String VERSION_SIGN = "_v";
 
     public String getLatestFileName(String type) {
         Map<Integer, String> versionFileNameMap;
-        if(BEACON_PREFIX.contains(type)) {
-            versionFileNameMap = getFileNamesMap(BuildConfig.URL, BEACON_PREFIX, BEACON_EXTENSION);
+        if(BuildConfig.BEACONS.contains(type)) {
+            versionFileNameMap = getFileNamesMap(BuildConfig.URL, BuildConfig.BEACONS, BEACON_EXTENSION);
         } else {
-            versionFileNameMap = getFileNamesMap(BuildConfig.URL, SCHEDULE_PREFIX, SCHEDULE_EXTENSION);
+            versionFileNameMap = getFileNamesMap(BuildConfig.URL, BuildConfig.SCHEDULE, SCHEDULE_EXTENSION);
         }
         Integer max = Collections.max(versionFileNameMap.keySet());
         return versionFileNameMap.get(max);
@@ -50,7 +48,7 @@ public class PageParser {
     }
 
     private Integer getVersion(String fileName, String extension) {
-        String version = fileName.substring(fileName.indexOf("_v") + 2, fileName.indexOf(extension));
+        String version = fileName.substring(fileName.indexOf(VERSION_SIGN) + VERSION_SIGN.length(), fileName.indexOf(extension));
         return Integer.valueOf(version);
     }
 }

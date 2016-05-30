@@ -43,7 +43,7 @@ public class SyncHelper {
                 return;
             }
             Log.d(TAG, "Starting remote sync.");
-            new DownloadTask(mContext, BuildConfig.BEACON).execute();
+            new DownloadTask(mContext, BuildConfig.BEACONS).execute();
             new DownloadTask(mContext, BuildConfig.SCHEDULE).execute();
         } catch (Throwable throwable) {
             throwable.printStackTrace();

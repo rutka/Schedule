@@ -339,7 +339,7 @@ public class MyScheduleActivity extends BaseActivity implements MyScheduleFragme
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        if (key.equals(BuildConfig.BEACON) || key.equals(BuildConfig.SCHEDULE)) {
+        if (key.equals(BuildConfig.BEACONS) || key.equals(BuildConfig.SCHEDULE)) {
             mDataHelper.refreshCalendar();
             Log.d(TAG, "Refreshing calendar.");
             updateData();

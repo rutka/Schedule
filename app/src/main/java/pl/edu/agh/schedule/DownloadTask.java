@@ -55,8 +55,8 @@ public class DownloadTask extends AsyncTask<String, Integer, AsyncTaskResult> {
             editor.putString(BuildConfig.SCHEDULE, fileName);
             editor.apply();
             printToast(fileName);
-        } else if(fileName.contains(BuildConfig.BEACON)) {
-            editor.putString(BuildConfig.BEACON, fileName);
+        } else if(fileName.contains(BuildConfig.BEACONS)) {
+            editor.putString(BuildConfig.BEACONS, fileName);
             editor.apply();
             printToast(fileName);
         }
