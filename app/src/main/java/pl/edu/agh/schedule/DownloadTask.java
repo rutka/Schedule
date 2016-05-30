@@ -20,7 +20,6 @@ import java.net.URL;
 import pl.edu.agh.schedule.util.ConstUtils;
 
 public class DownloadTask extends AsyncTask<String, Integer, AsyncTaskResult> {
-    private static String URL = "http://www.student.agh.edu.pl/~rutka/";
     private final String type;
 
     private Context context;
@@ -41,18 +40,12 @@ public class DownloadTask extends AsyncTask<String, Integer, AsyncTaskResult> {
     }
 
     protected void onPostExecute(AsyncTaskResult result) {
-        //todo poprawic wyswitlanie sie wiadomosci koncowej
         if (result.getError() != null) {
-            Toast.makeText(context, "Błąd: " + result.getError(), Toast.LENGTH_LONG).show();
             result.getError().printStackTrace();
-        } else if (isCancelled()) {
-            Toast.makeText(context, "Przerwano pobieranie aktualizacji", Toast.LENGTH_LONG).show();
         } else {
             result.notifyObserver();
             String realResult = result.getResult();
             savePreferences(realResult);
-            //FIXME saving not found file
-            Toast.makeText(context, "File " + realResult + " downloaded", Toast.LENGTH_LONG).show();
         }
     }
 
@@ -63,10 +56,16 @@ public class DownloadTask extends AsyncTask<String, Integer, AsyncTaskResult> {
         if (fileName.contains(ConstUtils.SCHEDULE)) {
             editor.putString(ConstUtils.SCHEDULE, fileName);
             editor.apply();
+            printToast(fileName);
         } else if(fileName.contains(ConstUtils.BEACON)) {
             editor.putString(ConstUtils.BEACON, fileName);
             editor.apply();
+            printToast(fileName);
         }
+    }
+
+    private void printToast(String fileName) {
+        Toast.makeText(context, "File " + fileName + " downloaded", Toast.LENGTH_LONG).show();
     }
 
     private String downloadFile() throws IOException {
@@ -132,7 +131,7 @@ public class DownloadTask extends AsyncTask<String, Integer, AsyncTaskResult> {
     }
 
     private HttpURLConnection connect(String fileName) throws IOException {
-        URL url = new URL(URL + fileName);
+        URL url = new URL(ConstUtils.URL + fileName);
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         connection.connect();
         return connection;

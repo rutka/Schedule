@@ -9,21 +9,22 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 
-public class PageParser {
-    private static String URL  = "http://www.student.agh.edu.pl/~rutka/";
+import pl.edu.agh.schedule.util.ConstUtils;
 
-    private static String SCHEDULE_PREFIX = "schedule_v";
-    private static String SCHEDULE_EXTENSION = ".ics";
-    private static String BEACON_PREFIX = "beacons_v";
-    private static String BEACON_EXTENSION = ".csv";
+public class PageParser {
+
+    private static final String SCHEDULE_PREFIX = "schedule_v";
+    private static final String SCHEDULE_EXTENSION = ".ics";
+    private static final String BEACON_PREFIX = "beacons_v";
+    private static final String BEACON_EXTENSION = ".csv";
 
 
     public String getLatestFileName(String type) {
         Map<Integer, String> versionFileNameMap;
         if(BEACON_PREFIX.contains(type)) {
-            versionFileNameMap = getFileNamesMap(URL, BEACON_PREFIX, BEACON_EXTENSION);
+            versionFileNameMap = getFileNamesMap(ConstUtils.URL, BEACON_PREFIX, BEACON_EXTENSION);
         } else {
-            versionFileNameMap = getFileNamesMap(URL, SCHEDULE_PREFIX, SCHEDULE_EXTENSION);
+            versionFileNameMap = getFileNamesMap(ConstUtils.URL, SCHEDULE_PREFIX, SCHEDULE_EXTENSION);
         }
         Integer max = Collections.max(versionFileNameMap.keySet());
         return versionFileNameMap.get(max);
