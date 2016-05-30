@@ -34,7 +34,7 @@ public class BeaconParser {
             br = new BufferedReader (new InputStreamReader(inputStream));
             while ((line = br.readLine()) != null) {
                 String[] splitLine = line.split(",");
-                deviceList.put(splitLine[0], splitLine[1]);
+                deviceList.put(splitLine[0].toLowerCase(), splitLine[1]);
             }
         } catch (IOException e) {
             e.printStackTrace();

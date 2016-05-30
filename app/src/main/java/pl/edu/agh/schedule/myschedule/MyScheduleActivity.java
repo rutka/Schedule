@@ -159,17 +159,20 @@ public class MyScheduleActivity extends BaseActivity implements MyScheduleFragme
         sp.registerOnSharedPreferenceChangeListener(this);
 
         beaconManager = new BeaconManager(this);
+        beaconManager.setBackgroundScanPeriod(1000, 5000);
         beaconManager.setRangingListener(new BeaconManager.RangingListener() {
             @Override
             public void onBeaconsDiscovered(Region region, List<Beacon> list) {
                 if (!list.isEmpty()) {
                     Beacon nearestBeacon = list.get(0);
-                    BeaconUtils.nearestBeacon(
-                            String.format("%s:%d:%d",
-                                    nearestBeacon.getProximityUUID().toString(),
-                                    nearestBeacon.getMajor(),
-                                    nearestBeacon.getMinor()));
-                    updateData();
+                    String id = String.format("%s:%d:%d",
+                            nearestBeacon.getProximityUUID().toString(),
+                            nearestBeacon.getMajor(),
+                            nearestBeacon.getMinor());
+                    if(!id.equals(BeaconUtils.nearestBeacon())) {
+                        BeaconUtils.nearestBeacon(id);
+                        updateData();
+                    }
                 }
             }
         });
