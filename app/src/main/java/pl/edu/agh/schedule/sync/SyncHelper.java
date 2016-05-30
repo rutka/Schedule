@@ -6,8 +6,8 @@ import android.net.ConnectivityManager;
 import android.util.Log;
 
 import pl.edu.agh.schedule.AsyncTaskResult;
+import pl.edu.agh.schedule.BuildConfig;
 import pl.edu.agh.schedule.DownloadTask;
-import pl.edu.agh.schedule.util.ConstUtils;
 
 import static pl.edu.agh.schedule.util.LogUtils.makeLogTag;
 
@@ -43,8 +43,8 @@ public class SyncHelper {
                 return;
             }
             Log.d(TAG, "Starting remote sync.");
-            new DownloadTask(mContext, ConstUtils.BEACON).execute();
-            new DownloadTask(mContext, ConstUtils.SCHEDULE).execute();
+            new DownloadTask(mContext, BuildConfig.BEACON).execute();
+            new DownloadTask(mContext, BuildConfig.SCHEDULE).execute();
         } catch (Throwable throwable) {
             throwable.printStackTrace();
             Log.e(TAG, "Error performing remote sync.");

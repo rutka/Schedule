@@ -44,11 +44,11 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import pl.edu.agh.schedule.BuildConfig;
 import pl.edu.agh.schedule.R;
 import pl.edu.agh.schedule.model.ScheduleHelper;
 import pl.edu.agh.schedule.ui.BaseActivity;
 import pl.edu.agh.schedule.util.BeaconUtils;
-import pl.edu.agh.schedule.util.ConstUtils;
 import pl.edu.agh.schedule.util.TimeUtils;
 
 import static pl.edu.agh.schedule.util.LogUtils.makeLogTag;
@@ -339,7 +339,7 @@ public class MyScheduleActivity extends BaseActivity implements MyScheduleFragme
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        if (key.equals(ConstUtils.BEACON) || key.equals(ConstUtils.SCHEDULE)) {
+        if (key.equals(BuildConfig.BEACON) || key.equals(BuildConfig.SCHEDULE)) {
             mDataHelper.refreshCalendar();
             Log.d(TAG, "Refreshing calendar.");
             updateData();

@@ -9,8 +9,6 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 
-import pl.edu.agh.schedule.util.ConstUtils;
-
 public class PageParser {
 
     private static final String SCHEDULE_PREFIX = "schedule_v";
@@ -22,9 +20,9 @@ public class PageParser {
     public String getLatestFileName(String type) {
         Map<Integer, String> versionFileNameMap;
         if(BEACON_PREFIX.contains(type)) {
-            versionFileNameMap = getFileNamesMap(ConstUtils.URL, BEACON_PREFIX, BEACON_EXTENSION);
+            versionFileNameMap = getFileNamesMap(BuildConfig.URL, BEACON_PREFIX, BEACON_EXTENSION);
         } else {
-            versionFileNameMap = getFileNamesMap(ConstUtils.URL, SCHEDULE_PREFIX, SCHEDULE_EXTENSION);
+            versionFileNameMap = getFileNamesMap(BuildConfig.URL, SCHEDULE_PREFIX, SCHEDULE_EXTENSION);
         }
         Integer max = Collections.max(versionFileNameMap.keySet());
         return versionFileNameMap.get(max);

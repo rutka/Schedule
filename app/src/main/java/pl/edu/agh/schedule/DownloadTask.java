@@ -17,8 +17,6 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-import pl.edu.agh.schedule.util.ConstUtils;
-
 public class DownloadTask extends AsyncTask<String, Integer, AsyncTaskResult> {
     private final String type;
 
@@ -53,12 +51,12 @@ public class DownloadTask extends AsyncTask<String, Integer, AsyncTaskResult> {
 
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
         SharedPreferences.Editor editor = sharedPreferences.edit();
-        if (fileName.contains(ConstUtils.SCHEDULE)) {
-            editor.putString(ConstUtils.SCHEDULE, fileName);
+        if (fileName.contains(BuildConfig.SCHEDULE)) {
+            editor.putString(BuildConfig.SCHEDULE, fileName);
             editor.apply();
             printToast(fileName);
-        } else if(fileName.contains(ConstUtils.BEACON)) {
-            editor.putString(ConstUtils.BEACON, fileName);
+        } else if(fileName.contains(BuildConfig.BEACON)) {
+            editor.putString(BuildConfig.BEACON, fileName);
             editor.apply();
             printToast(fileName);
         }
@@ -131,7 +129,7 @@ public class DownloadTask extends AsyncTask<String, Integer, AsyncTaskResult> {
     }
 
     private HttpURLConnection connect(String fileName) throws IOException {
-        URL url = new URL(ConstUtils.URL + fileName);
+        URL url = new URL(BuildConfig.URL + fileName);
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         connection.connect();
         return connection;
