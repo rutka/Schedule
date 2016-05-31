@@ -159,6 +159,7 @@ public class MyScheduleActivity extends BaseActivity implements MyScheduleFragme
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
         sp.registerOnSharedPreferenceChangeListener(this);
 
+        // FIXME adjust settings
         beaconManager = new BeaconManager(this);
         beaconManager.setBackgroundScanPeriod(1000, 5000);
         beaconManager.setRangingListener(new BeaconManager.RangingListener() {

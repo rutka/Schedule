@@ -29,7 +29,7 @@ public class CalendarParser {
     private static final String EVENT_NAME = "VEVENT";
     private static final String PROPERTY_LOCATION_NAME = "LOCATION";
     private Calendar calendar;
-    private Map<String,List<EventDTO>> locationEventsMap;
+    private Map<String, List<EventDTO>> locationEventsMap;
     private Map<String, String> beaconLocationMap;
 
     public CalendarParser(Context context) {
@@ -72,18 +72,24 @@ public class CalendarParser {
     }
 
     public List<EventDTO> getEventsByBeaconAndDate(String id, Date date) {
-        date = TimeUtils.toShortDate(date);
-        Log.d(TAG, "Looking for events for beacon " + id + " and date " + date);
         List<EventDTO> eventDTOList = new LinkedList<>();
-        List<EventDTO> eventsByBeacon = getEventsByBeacon(id);
-        if (eventsByBeacon != null) {
-            for (EventDTO eventDTO : eventsByBeacon) {
-                if (eventDTO.getDateList().contains(date)) {
-                    eventDTOList.add(eventDTO);
+        if (isValidInput(id, date)) {
+            date = TimeUtils.toShortDate(date);
+            Log.d(TAG, "Looking for events for beacon " + id + " and date " + date);
+            List<EventDTO> eventsByBeacon = getEventsByBeacon(id);
+            if (eventsByBeacon != null) {
+                for (EventDTO eventDTO : eventsByBeacon) {
+                    if (eventDTO.getDateList().contains(date)) {
+                        eventDTOList.add(eventDTO);
+                    }
                 }
             }
         }
         return eventDTOList;
+    }
+
+    private boolean isValidInput(String id, Date date) {
+        return id != null && date != null;
     }
 
     private List<EventDTO> getEventsByLocation(String location) {

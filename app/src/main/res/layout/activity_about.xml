@@ -56,13 +56,6 @@
                 android:layout_height="wrap_content"
                 android:text="@string/about_authors" />
 
-            <TextView
-                android:id="@+id/about_licenses"
-                style="@style/AboutLink"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/about_licenses" />
-
         </LinearLayout>
 
         <LinearLayout

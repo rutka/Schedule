@@ -40,9 +40,6 @@ public class AboutActivity extends BaseActivity {
                 case R.id.about_authors:
                     AboutUtils.showEula(AboutActivity.this); //TODO change for authors
                     break;
-                case R.id.about_licenses:
-                    AboutUtils.showOpenSourceLicenses(AboutActivity.this); //TODO check licenses
-                    break;
             }
         }
     };
@@ -54,9 +51,8 @@ public class AboutActivity extends BaseActivity {
         rootView = findViewById(R.id.about_container);
 
         TextView body = (TextView) rootView.findViewById(R.id.about_main);
-        body.setText(Html.fromHtml(getString(R.string.about_main, BuildConfig.VERSION_NAME))); //TODO change version
+        body.setText(Html.fromHtml(getString(R.string.about_main, BuildConfig.VERSION_NAME)));
         rootView.findViewById(R.id.about_authors).setOnClickListener(mOnClickListener);
-        rootView.findViewById(R.id.about_licenses).setOnClickListener(mOnClickListener);
 
         overridePendingTransition(0, 0);
     }
