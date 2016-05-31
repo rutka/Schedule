@@ -36,6 +36,7 @@ import android.widget.TextView;
 import com.estimote.sdk.Beacon;
 import com.estimote.sdk.BeaconManager;
 import com.estimote.sdk.Region;
+import com.estimote.sdk.SystemRequirementsChecker;
 
 import org.joda.time.DateTime;
 
@@ -256,6 +257,7 @@ public class MyScheduleActivity extends BaseActivity implements MyScheduleFragme
     @Override
     public void onResume() {
         super.onResume();
+        SystemRequirementsChecker.checkWithDefaultDialogs(this);
         updateData();
     }
 
