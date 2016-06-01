@@ -82,7 +82,7 @@ public class DownloadTask extends AsyncTask<String, Integer, AsyncTaskResult> {
             }
             int fileLength = connection.getContentLength();
             createFolder();
-            File file = new File(Environment.getExternalStorageDirectory() + "/MySchedule/" + latestFileName);
+            File file = new File(Environment.getExternalStorageDirectory() + "/"+ BuildConfig.APP_FOLDER + "/" + latestFileName);
             Log.d("DEBUG", file.getPath());
             if (file.exists()) {
                 Log.d("DEBUG", "Brak aktualizacji");
@@ -117,7 +117,7 @@ public class DownloadTask extends AsyncTask<String, Integer, AsyncTaskResult> {
     }
 
     private void createFolder() {
-        File folder = new File(Environment.getExternalStorageDirectory() + "/MySchedule");
+        File folder = new File(Environment.getExternalStorageDirectory() + "/" + BuildConfig.APP_FOLDER);
         if (!folder.exists()) {
             Log.d("DEBUG", "Create dir: " + folder.getPath());
             folder.mkdir();

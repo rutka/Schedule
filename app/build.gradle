@@ -14,6 +14,7 @@ android {
         buildConfigField("String", "URL", "\"${url}\"")
         buildConfigField("String", "BEACONS", "\"${beacons_prefix_file_name}\"")
         buildConfigField("String", "SCHEDULE", "\"${schedule_prefix_file_name}\"")
+        buildConfigField("String", "APP_FOLDER", "\"${app_folder}\"")
     }
     buildTypes {
         release {

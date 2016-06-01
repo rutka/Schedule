@@ -11,11 +11,8 @@ import java.io.InputStream;
 
 public class InputStreamFactory {
 
-    private static final String SCHEDULE = "schedule";
-    private static final String BEACON = "beacon";
-
     public InputStream getSchedule(Context context) throws FileNotFoundException {
-        String scheduleLatestFileName = getPreferences(context, SCHEDULE);
+        String scheduleLatestFileName = getPreferences(context, BuildConfig.SCHEDULE);
         if(scheduleLatestFileName == null) {
             return createInputStream(context, R.raw.schedule_v0);
         } else {
@@ -24,7 +21,7 @@ public class InputStreamFactory {
     }
 
     public InputStream getBeacon(Context context) throws FileNotFoundException {
-        String beaconLatestFileName = getPreferences(context, BEACON);
+        String beaconLatestFileName = getPreferences(context, BuildConfig.BEACONS);
         if(beaconLatestFileName == null) {
             return createInputStream(context, R.raw.beacons_v0);
         } else {
@@ -42,6 +39,6 @@ public class InputStreamFactory {
     }
 
     private String getPath() {
-        return Environment.getExternalStorageDirectory() + "/MySchedule/";
+        return Environment.getExternalStorageDirectory() + "/" + BuildConfig.APP_FOLDER + "/";
     }
 }
