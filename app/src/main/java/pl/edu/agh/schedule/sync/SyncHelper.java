@@ -46,6 +46,7 @@ public class SyncHelper {
             new DownloadTask(mContext, BuildConfig.BEACONS).execute();
             new DownloadTask(mContext, BuildConfig.SCHEDULE).execute();
         } catch (Throwable throwable) {
+            syncStatusObserver.onStatusChanged(0);
             throwable.printStackTrace();
             Log.e(TAG, "Error performing remote sync.");
         }

@@ -10,9 +10,6 @@ public class ScheduleItem implements Cloneable, Comparable<ScheduleItem> {
     public String title = "";
     public String description = "";
 
-    // background image URL
-    public String backgroundImageUrl = ""; // FIXME need to hardcode img
-
     @Override
     public Object clone()  {
         try {

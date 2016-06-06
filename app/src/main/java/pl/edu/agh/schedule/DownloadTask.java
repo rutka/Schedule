@@ -41,10 +41,10 @@ public class DownloadTask extends AsyncTask<String, Integer, AsyncTaskResult> {
         if (result.getError() != null) {
             result.getError().printStackTrace();
         } else {
-            result.notifyObserver();
             String realResult = result.getResult();
             savePreferences(realResult);
         }
+        result.notifyObserver();
     }
 
     private void savePreferences(String fileName) {
@@ -129,7 +129,7 @@ public class DownloadTask extends AsyncTask<String, Integer, AsyncTaskResult> {
     }
 
     private HttpURLConnection connect(String fileName) throws IOException {
-        URL url = new URL(BuildConfig.URL + fileName);
+        URL url = new URL(BuildConfig.SERVER_URL + fileName);
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         connection.connect();
         return connection;

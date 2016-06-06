@@ -1,13 +1,13 @@
 package pl.edu.agh.schedule;
 
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+
 import java.io.IOException;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
 
 public class PageParser {
 
@@ -18,9 +18,9 @@ public class PageParser {
     public String getLatestFileName(String type) {
         Map<Integer, String> versionFileNameMap;
         if(BuildConfig.BEACONS.contains(type)) {
-            versionFileNameMap = getFileNamesMap(BuildConfig.URL, BuildConfig.BEACONS, BEACON_EXTENSION);
+            versionFileNameMap = getFileNamesMap(BuildConfig.SERVER_URL, BuildConfig.BEACONS, BEACON_EXTENSION);
         } else {
-            versionFileNameMap = getFileNamesMap(BuildConfig.URL, BuildConfig.SCHEDULE, SCHEDULE_EXTENSION);
+            versionFileNameMap = getFileNamesMap(BuildConfig.SERVER_URL, BuildConfig.SCHEDULE, SCHEDULE_EXTENSION);
         }
         Integer max = Collections.max(versionFileNameMap.keySet());
         return versionFileNameMap.get(max);

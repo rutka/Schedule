@@ -30,8 +30,6 @@ import pl.edu.agh.schedule.R;
  * To use, call setListAdapter(), passing it an instance of your MyScheduleAdapter.
  */
 public class MyScheduleFragment extends ListFragment {
-    private String mContentDescription = null;
-    private View mRoot = null;
 
     public interface Listener {
         void onFragmentViewCreated(ListFragment fragment);
@@ -41,11 +39,7 @@ public class MyScheduleFragment extends ListFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        mRoot = inflater.inflate(R.layout.fragment_my_schedule, container, false);
-        if (mContentDescription != null) {
-            mRoot.setContentDescription(mContentDescription);
-        }
-        return mRoot;
+        return inflater.inflate(R.layout.fragment_my_schedule, container, false);
     }
 
     @Override

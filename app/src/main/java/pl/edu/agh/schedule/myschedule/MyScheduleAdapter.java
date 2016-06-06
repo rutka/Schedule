@@ -18,10 +18,11 @@ package pl.edu.agh.schedule.myschedule;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.database.DataSetObserver;
-import android.net.Uri;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -36,6 +37,7 @@ import java.util.Date;
 import java.util.List;
 
 import pl.edu.agh.schedule.R;
+import pl.edu.agh.schedule.details.DetailActivity;
 import pl.edu.agh.schedule.model.ScheduleItem;
 import pl.edu.agh.schedule.util.LUtils;
 import pl.edu.agh.schedule.util.TimeUtils;
@@ -48,6 +50,10 @@ import static pl.edu.agh.schedule.util.LogUtils.makeLogTag;
  */
 public class MyScheduleAdapter implements ListAdapter, AbsListView.RecyclerListener {
     private static final String TAG = makeLogTag(MyScheduleAdapter.class);
+    public static final String START_TIME = "START_TIME";
+    public static final String END_TIME = "END_TIME";
+    public static final String TITLE = "TITLE";
+    public static final String DESCRIPTION = "DESCRIPTION";
 
     private final Context mContext;
     private final LUtils mLUtils;
@@ -131,7 +137,7 @@ public class MyScheduleAdapter implements ListAdapter, AbsListView.RecyclerListe
     }
 
     private String formatDescription(ScheduleItem item) {
-        if(item.description.length() > 20) {
+        if (item.description.length() > 20) {
             return item.description.substring(0, 20);
         }
         return item.description;
@@ -140,18 +146,23 @@ public class MyScheduleAdapter implements ListAdapter, AbsListView.RecyclerListe
     private View.OnClickListener mUriOnClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            /*Object tag = v.getTag(R.id.myschedule_uri_tagkey);
-            System.out.println(v);
-            System.out.println(tag);
-            if (tag != null && tag instanceof Uri) {
-                Uri uri = (Uri) tag;
-                //mContext.startActivity(new Intent(Intent.ACTION_VIEW, uri)); FIXME openning details
-            }*/
+            ScheduleItem tag = (ScheduleItem) v.getTag();
+            if (tag != null) {
+                Intent intent = new Intent(Intent.ACTION_VIEW);
+                intent.setClass(mContext, DetailActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putLong(START_TIME, tag.startTime);
+                bundle.putLong(END_TIME, tag.endTime);
+                bundle.putString(TITLE, tag.title);
+                bundle.putString(DESCRIPTION, tag.description);
+                intent.putExtras(bundle);
+                mContext.startActivity(intent);
+            }
         }
     };
 
-    private void setUriClickable(View view, Uri uri) {
-//        view.setTag(R.id.myschedule_uri_tagkey, uri);
+    private void setUriClickable(View view, ScheduleItem item) {
+        view.setTag(item);
         view.setOnClickListener(mUriOnClickListener);
         view.setBackgroundResource(mSelectableItemBackground);
     }
@@ -215,9 +226,9 @@ public class MyScheduleAdapter implements ListAdapter, AbsListView.RecyclerListe
         ScheduleItem nextItem = position < mItems.size() - 1 ? mItems.get(position + 1) : null;
 
         long now = UIUtils.getCurrentTime(view.getContext());
-        boolean isPastDuringConference = item.endTime <= now;
+        boolean isPast = item.endTime <= now;
 
-        if (isPastDuringConference) {
+        if (isPast) {
             view.setBackgroundColor(mColorBackgroundPast);
             holder.startTime.setTextColor(mHourColorPast);
             holder.title.setTextColor(mTitleColorPast);
@@ -229,24 +240,16 @@ public class MyScheduleAdapter implements ListAdapter, AbsListView.RecyclerListe
         }
         holder.description.setVisibility(View.VISIBLE);
         holder.startTime.setText(TimeUtils.formatShortTime(mContext, new Date(item.startTime)));
+        holder.title.setVisibility(View.VISIBLE);
+        holder.title.setText(item.title);
+        holder.startTime.setVisibility(View.VISIBLE);
+        // Padding fix needed for KitKat 4.4. (padding gets removed by setting the background)
+        holder.startTime.setPadding(
+                (int) mContext.getResources().getDimension(R.dimen.keyline_2), 0,
+                (int) mContext.getResources().getDimension(R.dimen.keyline_2), 0);
+        setUriClickable(holder.touchArea, item);
 
-//        holder.touchArea.setTag(R.id.myschedule_uri_tagkey, null);
-           holder.title.setVisibility(View.VISIBLE);
-            holder.title.setText(item.title);
-
-           // Uri sessionUri = ScheduleContract.Sessions.buildSessionUri(item.sessionId); FIXME
-
-                holder.startTime.setVisibility(View.VISIBLE);
-                /*setUriClickable(holder.startTime,
-                        ScheduleContract.Sessions.buildUnscheduledSessionsInInterval(
-                                item.startTime, item.endTime));*/
-                // Padding fix needed for KitKat 4.4. (padding gets removed by setting the background)
-                holder.startTime.setPadding(
-                        (int) mContext.getResources().getDimension(R.dimen.keyline_2), 0,
-                        (int) mContext.getResources().getDimension(R.dimen.keyline_2), 0);
-                // FIXME setUriClickable(holder.touchArea, sessionUri);
-
-            holder.description.setText(formatDescription(item));
+        holder.description.setText(formatDescription(item));
 
 
         holder.separator.setVisibility(nextItem == null ? View.GONE : View.VISIBLE);
@@ -266,7 +269,6 @@ public class MyScheduleAdapter implements ListAdapter, AbsListView.RecyclerListe
     public int getItemViewType(int position) {
         return 0;
     }
-
 
     @Override
     public int getViewTypeCount() {

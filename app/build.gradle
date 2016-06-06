@@ -11,10 +11,11 @@ android {
         versionCode 1
         versionName "1.0.1"
 
-        buildConfigField("String", "URL", "\"${url}\"")
+        buildConfigField("String", "SERVER_URL", "\"${url}\"")
         buildConfigField("String", "BEACONS", "\"${beacons_prefix_file_name}\"")
         buildConfigField("String", "SCHEDULE", "\"${schedule_prefix_file_name}\"")
         buildConfigField("String", "APP_FOLDER", "\"${app_folder}\"")
+        buildConfigField("String", "BACKGROUND_IMAGE", "\"${background_image_name}\"")
     }
     buildTypes {
         release {

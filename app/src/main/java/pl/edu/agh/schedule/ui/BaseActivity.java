@@ -22,6 +22,7 @@ import android.animation.TypeEvaluator;
 import android.animation.ValueAnimator;
 import android.content.Intent;
 import android.content.SyncStatusObserver;
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
@@ -35,8 +36,10 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 
 import java.util.ArrayList;
 
@@ -507,4 +510,35 @@ public abstract class BaseActivity extends AppCompatActivity implements
     public boolean canSwipeRefreshChildScrollUp() {
         return false;
     }
+
+    /**
+     * Returns true if the theme sets the {@code R.attr.isFloatingWindow} flag to true.
+     */
+    protected boolean shouldBeFloatingWindow() {
+        Resources.Theme theme = getTheme();
+        TypedValue floatingWindowFlag = new TypedValue();
+
+        // Check isFloatingWindow flag is defined in theme.
+        if (theme == null || !theme
+                .resolveAttribute(R.attr.isFloatingWindow, floatingWindowFlag, true)) {
+            return false;
+        }
+
+        return (floatingWindowFlag.data != 0);
+    }
+    
+    /**
+     * Configure this Activity as a floating window, with the given {@code width}, {@code height}
+     * and {@code alpha}, and dimming the background with the given {@code dim} value.
+     */
+    protected void setupFloatingWindow(int width, int height, int alpha, float dim) {
+        WindowManager.LayoutParams params = getWindow().getAttributes();
+        params.width = getResources().getDimensionPixelSize(width);
+        params.height = getResources().getDimensionPixelSize(height);
+        params.alpha = alpha;
+        params.dimAmount = dim;
+        params.flags |= WindowManager.LayoutParams.FLAG_DIM_BEHIND;
+        getWindow().setAttributes(params);
+    }
+
 }

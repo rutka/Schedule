@@ -66,8 +66,6 @@ public class ScheduleHelper {
                 item.startTime = TimeUtils.timestampToMillis(event.getStartTime());
                 item.endTime = TimeUtils.timestampToMillis(event.getEndTime());
                 item.description = event.getDescription();
-                // FIXME after hardcoded image
-                item.backgroundImageUrl = "https://storage.googleapis.com/io2015-data.appspot.com/images/sessions/__w-200-400-600-800-1000__/11718f8b-b6d4-e411-b87f-00155d5066d7.jpg";
                 scheduleItems.add(item);
             } catch (TimeUtils.TimestampException e) {
                 Log.e(TAG, "Wrong timestamp format in event.");

@@ -92,4 +92,6 @@
     <dimen name="divider_height_inc_padding_top_only">8dp</dimen>
     <dimen name="divider_padding_top">7dp</dimen>
     <dimen name="divider_padding_bottom">8dp</dimen>
+    <dimen name="fab_elevation">8dp</dimen>
+    <dimen name="detail_max_header_elevation">@dimen/headerbar_elevation</dimen>
 </resources>

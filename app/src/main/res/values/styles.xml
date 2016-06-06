@@ -45,6 +45,37 @@
 
     <style name="Theme.IOSched" parent="Theme.IOSched.Base" />
 
+    <!-- Intermediary theme for Details (so we can override it on large screens) -->
+    <style name="Theme.IOSched.Details.Base" parent="Theme.IOSched">
+        <item name="isFloatingWindow">false</item>
+    </style>
+
+    <!-- Details -->
+    <style name="Theme.IOSched.Details" parent="Theme.IOSched.Details.Base" />
+
+    <style name="SessionTimeHint" parent="TextBody">
+        <item name="android:textStyle">italic</item>
+        <item name="android:textColor">@color/body_text_2</item>
+    </style>
+
+    <style name="TextBody">
+        <item name="android:textSize">@dimen/text_size_medium</item>
+        <item name="android:textColor">@color/body_text_1</item>
+        <item name="android:lineSpacingMultiplier">1.1</item>
+        <item name="android:textAlignment">textStart</item>
+    </style>
+
+    <style name="SessionDetailsTitle">
+        <item name="android:textAppearance">@style/TextAppearance.Title</item>
+        <item name="android:textColor">?android:textColorPrimary</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:lineSpacingMultiplier">@dimen/h3_spacing</item>
+    </style>
+
+    <style name="TextAppearance.Title" parent="TextAppearance.AppCompat.Title">
+        <item name="android:fontFamily">sans-serif-medium</item>
+    </style>
+
     <style name="Theme.IOSched.Base" parent="Theme">
         <item name="actionBarIconColor">#fff</item>
         <item name="actionBarInsetStart">@dimen/keyline_2</item>

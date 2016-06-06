@@ -861,105 +861,11 @@ user updates the rating. -->
     <!-- Label for Search screen, that allows users to search for sessions. -->
     <string name="title_search">Search</string>
 
-    <!-- Map breadcrumb text for navigating session entries -->
-    <string name="title_session_detail">Session Information</string>
-
-    <!-- Label for SessionFeedback activity -->
-    <string name="title_session_feedback">Session Feedback</string>
+    <!-- Map breadcrumb text for navigating entries -->
+    <string name="title_detail">Classes Information</string>
 
     <!-- Label for Settings activity -->
     <string name="title_settings">Settings</string>
-
-    <!-- Chooser dialog text when the user is selecting an application with which to share something -->
-    <string name="title_share">Share using</string>
-
-    <!-- Label for VideoLibrary activity -->
-    <string name="title_video_library">Videos</string>
-
-    <!-- Label for exploration category which groups session topics -->
-    <string name="topics">Topics</string>
-
-    <!-- Label for exploration category which groups session types -->
-    <string name="types">Types</string>
-
-    <!-- Text for a session description indicating it does not have a room specified -->
-    <string name="unknown_room">(Unspecified Room)</string>
-
-    <!-- Label on a button that, when clicked, will let the user update the application to
-    a newer version. -->
-    <string name="update_app">Update App</string>
-
-    <!-- Text for a button which allows the user to watch this particular session on live stream. -->
-    <string name="watch_now">Watch Now!</string>
-
-    <!-- Text for a button which allows the user to enable the feature -->
-    <string name="welcome_enable">Enable</string>
-
-    <!-- Text for a button which allows the user to reject the feature -->
-    <string name="welcome_no_thanks">No Thanks</string>
-
-    <!-- Short text welcoming the user to the application -->
-    <string name="welcome_to_google_i_o_app">Welcome to the Google I/O app!</string>
-
-    <!-- Medium-length welcome text indicating the subsequent text is important legal information -->
-    <string name="welcome_text">Before we begin, here is some important legal information regarding your use of this app. This will only take a minute!</string>
-
-    <!-- Short text introducing the code of conduct for attendees coming in person -->
-    <string name="welcome_conduct_title">I/O Community Best Practices</string>
-
-    <!-- Short text asking if the user is attending Google I/O in person -->
-    <string name="welcome_attending">Attending in Person?</string>
-
-    <!-- Medium-length welcome text asking if the user is attending Google I/O in person -->
-    <string name="welcome_attending_text">Are you attending I/O remotely or in person in San Francisco?</string>
-
-    <!-- Short text asking if they're interested in what's around them -->
-    <string name="welcome_around">Around you</string>
-
-    <!-- Short text asking them to select an account -->
-    <string name="welcome_select_account">Select an account</string>
-
-    <!-- Medium text asking to choose an account from a list -->
-    <string name="welcome_select_accoun_text">Please choose an account to use:</string>
-
-    <!-- Text for a button which will add a wi-fi network -->
-    <string name="wifi_dialog_button_configure">Add WiFi Network</string>
-
-    <!-- Text for a button which will open the user's Wi-Fi settings -->
-    <string name="wifi_dialog_button_settings">Open WiFi Settings</string>
-
-    <!-- Toast failure message if the user's wifi couldn't be updated -->
-    <string name="wifi_install_error_message">Sorry, unable to update WiFi configuration</string>
-
-    <!-- Title of the Video library screen when only videos of a given topic are displayed -->
-    <string name="title_topic_filtered_video_library">Videos about <xliff:g id="topic">%1$s</xliff:g></string>
-
-    <!-- Title of the Video library screen when only videos of a given year are displayed -->
-    <string name="title_year_filtered_video_library"><xliff:g id="year">%1$d</xliff:g> videos</string>
-
-    <!-- Title of the Video library screen when only videos of a given year and a given topic are displayed -->
-    <string name="title_year_and_topic_filtered_video_library"><xliff:g id="year">%1$d</xliff:g> videos about <xliff:g id="topic">%2$s</xliff:g></string>
-
-    <!-- Text of the Filter menu icon -->
-    <string name="description_filter">Filter</string>
-
-    <!-- Title of the Video library side panel containing all the filters -->
-    <string name="title_video_library_filter">Filter</string>
-
-    <!-- Sub-title for the Year filters -->
-    <string name="year_filter_section_label">Year</string>
-
-    <!-- Sub-title for the Topic filters -->
-    <string name="topic_filter_section_label">Topic</string>
-
-    <!-- Label of filter option that allow to display all elements -->
-    <string name="all">ALL</string>
-
-    <!-- Label for Social activity -->
-    <string name="title_activity_new_social">Social</string>
-
-    <!-- Title of the Explore Sessions side panel containing all the filters -->
-    <string name="title_explore_sessions_filter">Filter</string>
 
     <!-- Sub-title for a session in ExploreSessionsActivity that shows the day, time and room name
         for a given session.

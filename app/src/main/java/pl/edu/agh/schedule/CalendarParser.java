@@ -142,7 +142,7 @@ public class CalendarParser {
         List<EventDTO> eventDTOList = new LinkedList<>();
         if (isValidInput(location, date)) {
             date = TimeUtils.toShortDate(date);
-            Log.d(TAG, "Looking for events for location" + location + " and date " + date);
+            Log.d(TAG, "Looking for events for location " + location + " and date " + date);
             List<EventDTO> eventsByBeacon = getEventsByLocation(location);
             if (eventsByBeacon != null) {
                 for (EventDTO eventDTO : eventsByBeacon) {

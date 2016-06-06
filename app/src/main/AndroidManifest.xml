@@ -35,6 +35,19 @@
         </activity>
 
         <activity
+            android:name=".details.DetailActivity"
+            android:label="@string/title_detail"
+            android:theme="@style/Theme.IOSched.Details"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
+
+        <activity
             android:name=".settings.SettingsActivity"
             android:label="@string/title_settings"
             android:parentActivityName=".myschedule.MyScheduleActivity"
