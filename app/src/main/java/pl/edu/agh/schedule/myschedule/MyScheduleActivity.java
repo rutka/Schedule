@@ -49,6 +49,7 @@ import java.util.Set;
 import pl.edu.agh.schedule.BuildConfig;
 import pl.edu.agh.schedule.R;
 import pl.edu.agh.schedule.model.ScheduleHelper;
+import pl.edu.agh.schedule.settings.SettingsActivity;
 import pl.edu.agh.schedule.ui.BaseActivity;
 import pl.edu.agh.schedule.util.BeaconUtils;
 import pl.edu.agh.schedule.util.TimeUtils;
@@ -368,7 +369,10 @@ public class MyScheduleActivity extends BaseActivity implements MyScheduleFragme
         location = newLocation;
         updateData();
         setTitle(newLocation);
-        // TODO TURN OFF BEACON SCAN AND ZERO LOCATION VARIABLE AFTER TURNING ON BEACON SCAN
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+        SharedPreferences.Editor editor = sp.edit();
+        editor.putBoolean(SettingsActivity.PREF_BEACON_SCAN_ENABLED, false);
+        editor.apply();
         return super.onOptionsItemSelected(item);
     }
 
@@ -378,6 +382,14 @@ public class MyScheduleActivity extends BaseActivity implements MyScheduleFragme
             mDataHelper.refreshCalendar();
             Log.d(TAG, "Refreshing calendar.");
             updateData();
+        } else if (key.equals(SettingsActivity.PREF_BEACON_SCAN_ENABLED)) {
+
+            if (sharedPreferences.getBoolean(key, true)) {
+                beaconManager.startRanging(region);
+            } else {
+                beaconManager.stopRanging(region);
+            }
+
         }
     }
 }

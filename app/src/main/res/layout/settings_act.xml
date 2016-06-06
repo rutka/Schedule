@@ -53,16 +53,6 @@
                      android:layout_height="wrap_content"
                      android:layout_gravity="top"
                      android:layout_marginTop="?actionBarSize">
-
-            <Switch
-                android:layout_width="match_parent"
-                android:layout_height="67dp"
-                android:text="Turn off beacon detector"
-                android:id="@+id/offlineSwitch"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:textSize="20dp"
-                android:checked="false" />
         </FrameLayout>
     </pl.edu.agh.schedule.ui.widget.DrawShadowFrameLayout>
 

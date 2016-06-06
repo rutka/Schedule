@@ -28,6 +28,8 @@ import pl.edu.agh.schedule.util.UIUtils;
  * Activity for customizing app settings.
  */
 public class SettingsActivity extends BaseActivity {
+    public static final String PREF_BEACON_SCAN_ENABLED = "pref_beacon_scan_enabled";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,6 +58,22 @@ public class SettingsActivity extends BaseActivity {
         public SettingsFragment() {
         }
 
+
+        @Override
+        public void onCreate(Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
+            addPreferencesFromResource(R.xml.settings_prefs);
+
+//            SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getActivity());
+//            sp.registerOnSharedPreferenceChangeListener(new MyScheduleActivity.MyActivity());
+        }
+
+        @Override
+        public void onDestroy() {
+            super.onDestroy();
+//            SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getActivity());
+//            sp.unregisterOnSharedPreferenceChangeListener(this);
+        }
 
         private void setContentTopClearance(int clearance) {
             if (getView() != null) {

@@ -1,7 +1,9 @@
 package pl.edu.agh.schedule.model;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
+import android.preference.PreferenceManager;
 import android.util.Log;
 
 import java.util.ArrayList;
@@ -13,6 +15,7 @@ import java.util.Set;
 import pl.edu.agh.schedule.CalendarParser;
 import pl.edu.agh.schedule.EventDTO;
 import pl.edu.agh.schedule.myschedule.MyScheduleAdapter;
+import pl.edu.agh.schedule.settings.SettingsActivity;
 import pl.edu.agh.schedule.util.BeaconUtils;
 import pl.edu.agh.schedule.util.TimeUtils;
 
@@ -39,9 +42,10 @@ public class ScheduleHelper {
      */
     private ArrayList<ScheduleItem> getScheduleData(Date date, String location) {
         try {
-            // TODO check if beacon scan is enabled
-            boolean beaconScanEnabled = false;
             List<ScheduleItem> data = null;
+
+            SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
+            boolean beaconScanEnabled = sp.getBoolean(SettingsActivity.PREF_BEACON_SCAN_ENABLED, true);
             if (beaconScanEnabled) {
                 String beaconId = BeaconUtils.nearestBeacon();
                 Log.v(TAG, "Getting schedules for beacon: " + beaconId + " and date: " + date);
