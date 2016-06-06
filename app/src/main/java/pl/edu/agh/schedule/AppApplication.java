@@ -9,7 +9,6 @@ import android.app.Application;
  * frameworks are in this very small set of use cases.
  */
 public class AppApplication extends Application {
-//TODO: 31/05/16 add which room is the nereast one and checking if ble is on
 
     @Override
     public void onCreate() {

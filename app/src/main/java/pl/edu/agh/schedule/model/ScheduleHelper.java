@@ -35,7 +35,7 @@ public class ScheduleHelper {
      * @param date of specific day
      * @return list of schedule items
      */
-    public ArrayList<ScheduleItem> getScheduleData(Date date) {
+    private ArrayList<ScheduleItem> getScheduleData(Date date) {
         try {
             String beaconId = BeaconUtils.nearestBeacon();
             Log.v(TAG, "Getting schedules for beacon: " + beaconId + " and date: " + date);
