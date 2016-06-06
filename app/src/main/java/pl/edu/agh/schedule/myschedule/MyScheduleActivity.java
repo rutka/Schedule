@@ -163,7 +163,7 @@ public class MyScheduleActivity extends BaseActivity implements MyScheduleFragme
 
         // FIXME adjust settings
         beaconManager = new BeaconManager(this);
-        beaconManager.setBackgroundScanPeriod(1000, 5000);
+        beaconManager.setForegroundScanPeriod(1000, 5000);
         beaconManager.setRangingListener(new BeaconManager.RangingListener() {
             @Override
             public void onBeaconsDiscovered(Region region, List<Beacon> list) {
