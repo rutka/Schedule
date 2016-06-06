@@ -87,7 +87,6 @@ public class MyScheduleActivity extends BaseActivity implements MyScheduleFragme
 
     private BeaconManager beaconManager;
     private Region region;
-    private int dayIndex;
     private String location;
 
     @Override
@@ -242,7 +241,7 @@ public class MyScheduleActivity extends BaseActivity implements MyScheduleFragme
     @Override
     public void onSaveInstanceState(Bundle outState) {
         outState.putString(TITLE, getTitle().toString());
-        outState.putInt(DAY_INDEX, dayIndex);
+        outState.putInt(DAY_INDEX, mViewPager.getCurrentItem());
         outState.putString(LOCATION, location);
         super.onSaveInstanceState(outState);
     }
@@ -251,7 +250,7 @@ public class MyScheduleActivity extends BaseActivity implements MyScheduleFragme
     public void onRestoreInstanceState(Bundle savedInstanceState) {
         setTitle(savedInstanceState.getString(TITLE));
         location = savedInstanceState.getString(LOCATION);
-/*        final int day = savedInstanceState.getInt(DAY_INDEX); //FIXME remembering state of tabs
+        final int day = savedInstanceState.getInt(DAY_INDEX);
         System.out.println(getDayName(day));
         new Handler().postDelayed(
                 new Runnable() {
@@ -260,7 +259,7 @@ public class MyScheduleActivity extends BaseActivity implements MyScheduleFragme
                         securelySelectTab(day);
                     }
                 }, 100);
-        selectDay(day);*/
+        selectDay(day);
         updateData();
         super.onRestoreInstanceState(savedInstanceState);
     }
@@ -307,7 +306,6 @@ public class MyScheduleActivity extends BaseActivity implements MyScheduleFragme
     @Override
     public void onFragmentViewCreated(ListFragment fragment) {
         int dayIndex = fragment.getArguments().getInt(DAY_INDEX, 0);
-        this.dayIndex = dayIndex;
         fragment.setListAdapter(mScheduleAdapters[dayIndex]);
         fragment.getListView().setRecyclerListener(mScheduleAdapters[dayIndex]);
 
