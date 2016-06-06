@@ -23,7 +23,6 @@ import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.PersistableBundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.TabLayout;
 import android.support.v13.app.FragmentPagerAdapter;
@@ -79,8 +78,8 @@ public class MyScheduleActivity extends BaseActivity implements MyScheduleFragme
 
     boolean mDestroyed = false;
 
-    private static final String ARG_CONFERENCE_DAY_INDEX
-            = "pl.edu.agh.schedule.myschedule.ARG_DAY_INDEX";
+    private static final String DAY_INDEX
+            = "pl.edu.agh.schedule.myschedule.DAY_INDEX";
 
     private Set<MyScheduleFragment> mMyScheduleFragments = new HashSet<>();
 
@@ -88,6 +87,7 @@ public class MyScheduleActivity extends BaseActivity implements MyScheduleFragme
 
     private BeaconManager beaconManager;
     private Region region;
+    private int dayIndex;
 
     @Override
     protected int getSelfNavDrawerItem() {
@@ -183,9 +183,24 @@ public class MyScheduleActivity extends BaseActivity implements MyScheduleFragme
         });
         region = new Region("ranged region", null, null, null);
         SystemRequirementsChecker.checkWithDefaultDialogs(this);
-        if (savedInstanceState != null) {
-            setTitle(savedInstanceState.getString(TITLE));
+        if (mViewPager != null) {
+            selectDay(TODAY);
         }
+        if (savedInstanceState == null) {
+            new Handler().postDelayed(
+                    new Runnable() {
+                        @Override
+                        public void run() {
+                            securelySelectTab(TODAY);
+                        }
+                    }, 100);
+        }
+        beaconManager.connect(new BeaconManager.ServiceReadyCallback() {
+            @Override
+            public void onServiceReady() {
+                beaconManager.startRanging(region);
+            }
+        });
     }
 
     private void securelySelectTab(int position) {
@@ -224,31 +239,25 @@ public class MyScheduleActivity extends BaseActivity implements MyScheduleFragme
     }
 
     @Override
-    protected void onPostCreate(Bundle savedInstanceState) {
-        super.onPostCreate(savedInstanceState);
-        if (mViewPager != null) {
-            selectDay(TODAY);
-        }
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putString(TITLE, getTitle().toString());
+        outState.putInt(DAY_INDEX, dayIndex);
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    public void onRestoreInstanceState(Bundle savedInstanceState) {
+        setTitle(savedInstanceState.getString(TITLE));
+        final int day = savedInstanceState.getInt(DAY_INDEX);
         new Handler().postDelayed(
                 new Runnable() {
                     @Override
                     public void run() {
-                        securelySelectTab(TODAY);
+                        securelySelectTab(day + 1); //Sorry, I don't know why it's needed.
                     }
                 }, 100);
-        // FIXME add onSaveInstanceState and restore during orientation change
-        beaconManager.connect(new BeaconManager.ServiceReadyCallback() {
-            @Override
-            public void onServiceReady() {
-                beaconManager.startRanging(region);
-            }
-        });
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
-        outState.putString(TITLE, getTitle().toString());
-        super.onSaveInstanceState(outState, outPersistentState);
+        selectDay(day);
+        super.onRestoreInstanceState(savedInstanceState);
     }
 
     private void selectDay(int day) {
@@ -268,13 +277,8 @@ public class MyScheduleActivity extends BaseActivity implements MyScheduleFragme
         return false;
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        updateData();
-    }
-
     protected void updateData() {
+        Log.d(TAG, "Filling adapters with data.");
         for (int i = 0; i < DAYS_RANGE; i++) {
             mDataHelper.getScheduleDataAsync(mScheduleAdapters[i], getDayAtPosition(i));
         }
@@ -297,7 +301,8 @@ public class MyScheduleActivity extends BaseActivity implements MyScheduleFragme
 
     @Override
     public void onFragmentViewCreated(ListFragment fragment) {
-        int dayIndex = fragment.getArguments().getInt(ARG_CONFERENCE_DAY_INDEX, 0);
+        int dayIndex = fragment.getArguments().getInt(DAY_INDEX, 0);
+        this.dayIndex = dayIndex;
         fragment.setListAdapter(mScheduleAdapters[dayIndex]);
         fragment.getListView().setRecyclerListener(mScheduleAdapters[dayIndex]);
 
@@ -324,7 +329,7 @@ public class MyScheduleActivity extends BaseActivity implements MyScheduleFragme
             Log.d(TAG, "Creating fragment #" + position);
             MyScheduleFragment frag = new MyScheduleFragment();
             Bundle args = new Bundle();
-            args.putInt(ARG_CONFERENCE_DAY_INDEX, position);
+            args.putInt(DAY_INDEX, position);
             frag.setArguments(args);
             return frag;
         }

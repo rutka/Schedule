@@ -146,7 +146,9 @@ public abstract class BaseActivity extends AppCompatActivity implements
         mLUtils = LUtils.getInstance(this);
         mNormalStatusBarColor = getResources().getColor(R.color.theme_primary_dark);
 
-        syncHelper = new SyncHelper(this, mSyncStatusObserver);
+        if (syncHelper == null) {
+            syncHelper = new SyncHelper(this, mSyncStatusObserver);
+        }
     }
 
     private void trySetupSwipeRefresh() {
