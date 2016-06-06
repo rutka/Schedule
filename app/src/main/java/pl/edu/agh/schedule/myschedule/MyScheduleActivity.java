@@ -23,6 +23,7 @@ import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.PersistableBundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.TabLayout;
 import android.support.v13.app.FragmentPagerAdapter;
@@ -61,6 +62,7 @@ public class MyScheduleActivity extends BaseActivity implements MyScheduleFragme
 
     private static final int DAYS_RANGE = 15;
     private static final int TODAY = 7;
+    private static final String TITLE = "pl.edu.agh.schedule.myschedule.TITLE";
 
     // The adapters that serves as the source of data for the UI, indicating the available
     // items. We have one adapter per day of the conference. When we push new data into these
@@ -181,6 +183,9 @@ public class MyScheduleActivity extends BaseActivity implements MyScheduleFragme
         });
         region = new Region("ranged region", null, null, null);
         SystemRequirementsChecker.checkWithDefaultDialogs(this);
+        if (savedInstanceState != null) {
+            setTitle(savedInstanceState.getString(TITLE));
+        }
     }
 
     private void securelySelectTab(int position) {
@@ -238,6 +243,12 @@ public class MyScheduleActivity extends BaseActivity implements MyScheduleFragme
                 beaconManager.startRanging(region);
             }
         });
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
+        outState.putString(TITLE, getTitle().toString());
+        super.onSaveInstanceState(outState, outPersistentState);
     }
 
     private void selectDay(int day) {
