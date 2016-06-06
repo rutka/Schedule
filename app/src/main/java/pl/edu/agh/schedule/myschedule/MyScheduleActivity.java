@@ -172,7 +172,7 @@ public class MyScheduleActivity extends BaseActivity implements MyScheduleFragme
                             nearestBeacon.getMajor(),
                             nearestBeacon.getMinor());
                     if (!id.equals(BeaconUtils.nearestBeacon())) {
-                        setTitle(id);
+                        setTitle(mDataHelper.getLocationForBeacon(id));
                         BeaconUtils.nearestBeacon(id);
                         updateData();
                     }

@@ -90,4 +90,8 @@ public class ScheduleHelper {
     public void refreshCalendar() {
         this.calendarParser.init(context);
     }
+
+    public String getLocationForBeacon(String beaconId) {
+        return calendarParser.getLocation(beaconId);
+    }
 }

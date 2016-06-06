@@ -128,4 +128,8 @@ public class CalendarParser {
     private boolean isEvent(Component component) {
         return component.getName().equals(EVENT_NAME);
     }
+
+    public String getLocation(String beaconId) {
+        return beaconLocationMap.get(beaconId);
+    }
 }
