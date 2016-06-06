@@ -171,7 +171,8 @@ public class MyScheduleActivity extends BaseActivity implements MyScheduleFragme
                             nearestBeacon.getProximityUUID().toString(),
                             nearestBeacon.getMajor(),
                             nearestBeacon.getMinor());
-                    if(!id.equals(BeaconUtils.nearestBeacon())) {
+                    if (!id.equals(BeaconUtils.nearestBeacon())) {
+                        setTitle(id);
                         BeaconUtils.nearestBeacon(id);
                         updateData();
                     }
@@ -179,6 +180,7 @@ public class MyScheduleActivity extends BaseActivity implements MyScheduleFragme
             }
         });
         region = new Region("ranged region", null, null, null);
+        SystemRequirementsChecker.checkWithDefaultDialogs(this);
     }
 
     private void securelySelectTab(int position) {
@@ -258,7 +260,6 @@ public class MyScheduleActivity extends BaseActivity implements MyScheduleFragme
     @Override
     public void onResume() {
         super.onResume();
-        SystemRequirementsChecker.checkWithDefaultDialogs(this);
         updateData();
     }
 

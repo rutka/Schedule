@@ -12,7 +12,7 @@ import pl.edu.agh.schedule.util.TimeUtils;
 
 public class ScheduleItemHelper {
 
-    private static final String TAG = LogUtils.makeLogTag(ScheduleItem.class);
+    private static final String TAG = LogUtils.makeLogTag(ScheduleItemHelper.class);
 
     /**
      * Sort items to be sure that are ordered properly
