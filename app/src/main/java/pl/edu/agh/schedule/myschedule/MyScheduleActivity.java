@@ -31,6 +31,7 @@ import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.TextView;
 
 import com.estimote.sdk.Beacon;
@@ -62,6 +63,8 @@ public class MyScheduleActivity extends BaseActivity implements MyScheduleFragme
     private static final int DAYS_RANGE = 15;
     private static final int TODAY = 7;
     private static final String TITLE = "pl.edu.agh.schedule.myschedule.TITLE";
+    private static final String LOCATION = "pl.edu.agh.schedule.myschedule.LOCATION";
+    private static final String DAY_INDEX = "pl.edu.agh.schedule.myschedule.DAY_INDEX";
 
     // The adapters that serves as the source of data for the UI, indicating the available
     // items. We have one adapter per day of the conference. When we push new data into these
@@ -70,16 +73,13 @@ public class MyScheduleActivity extends BaseActivity implements MyScheduleFragme
 
     // The ScheduleHelper is responsible for feeding data in a format suitable to the Adapter.
     private ScheduleHelper mDataHelper;
-
     // View pager and adapter
     ViewPager mViewPager = null;
     OurViewPagerAdapter mViewPagerAdapter = null;
+
     TabLayout mTabLayout = null;
 
     boolean mDestroyed = false;
-
-    private static final String DAY_INDEX
-            = "pl.edu.agh.schedule.myschedule.DAY_INDEX";
 
     private Set<MyScheduleFragment> mMyScheduleFragments = new HashSet<>();
 
@@ -88,6 +88,7 @@ public class MyScheduleActivity extends BaseActivity implements MyScheduleFragme
     private BeaconManager beaconManager;
     private Region region;
     private int dayIndex;
+    private String location;
 
     @Override
     protected int getSelfNavDrawerItem() {
@@ -242,21 +243,25 @@ public class MyScheduleActivity extends BaseActivity implements MyScheduleFragme
     public void onSaveInstanceState(Bundle outState) {
         outState.putString(TITLE, getTitle().toString());
         outState.putInt(DAY_INDEX, dayIndex);
+        outState.putString(LOCATION, location);
         super.onSaveInstanceState(outState);
     }
 
     @Override
     public void onRestoreInstanceState(Bundle savedInstanceState) {
         setTitle(savedInstanceState.getString(TITLE));
-        final int day = savedInstanceState.getInt(DAY_INDEX);
+        location = savedInstanceState.getString(LOCATION);
+/*        final int day = savedInstanceState.getInt(DAY_INDEX); //FIXME remembering state of tabs
+        System.out.println(getDayName(day));
         new Handler().postDelayed(
                 new Runnable() {
                     @Override
                     public void run() {
-                        securelySelectTab(day + 1); //Sorry, I don't know why it's needed.
+                        securelySelectTab(day);
                     }
                 }, 100);
-        selectDay(day);
+        selectDay(day);*/
+        updateData();
         super.onRestoreInstanceState(savedInstanceState);
     }
 
@@ -280,7 +285,7 @@ public class MyScheduleActivity extends BaseActivity implements MyScheduleFragme
     protected void updateData() {
         Log.d(TAG, "Filling adapters with data.");
         for (int i = 0; i < DAYS_RANGE; i++) {
-            mDataHelper.getScheduleDataAsync(mScheduleAdapters[i], getDayAtPosition(i));
+            mDataHelper.getScheduleDataAsync(mScheduleAdapters[i], getDayAtPosition(i), location);
         }
     }
 
@@ -351,10 +356,22 @@ public class MyScheduleActivity extends BaseActivity implements MyScheduleFragme
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        super.onCreateOptionsMenu(menu);
-        getMenuInflater().inflate(R.menu.my_schedule, menu);
-        return true;
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        menu.clear();
+        for (String location : mDataHelper.getLocations()) {
+            menu.add(location);
+        }
+        return super.onPrepareOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        String newLocation = item.getTitle().toString();
+        location = newLocation;
+        updateData();
+        setTitle(newLocation);
+        // TODO TURN OFF BEACON SCAN AND ZERO LOCATION VARIABLE AFTER TURNING ON BEACON SCAN
+        return super.onOptionsItemSelected(item);
     }
 
     @Override

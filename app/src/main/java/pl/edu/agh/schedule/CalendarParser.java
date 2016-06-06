@@ -18,6 +18,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import pl.edu.agh.schedule.util.LogUtils;
 import pl.edu.agh.schedule.util.TimeUtils;
@@ -131,5 +132,26 @@ public class CalendarParser {
 
     public String getLocation(String beaconId) {
         return beaconLocationMap.get(beaconId);
+    }
+
+    public Set<String> getLocations() {
+        return locationEventsMap.keySet();
+    }
+
+    public List<EventDTO> getEventsByLocationAndDate(String location, Date date) {
+        List<EventDTO> eventDTOList = new LinkedList<>();
+        if (isValidInput(location, date)) {
+            date = TimeUtils.toShortDate(date);
+            Log.d(TAG, "Looking for events for location" + location + " and date " + date);
+            List<EventDTO> eventsByBeacon = getEventsByLocation(location);
+            if (eventsByBeacon != null) {
+                for (EventDTO eventDTO : eventsByBeacon) {
+                    if (eventDTO.getDateList().contains(date)) {
+                        eventDTOList.add(eventDTO);
+                    }
+                }
+            }
+        }
+        return eventDTOList;
     }
 }

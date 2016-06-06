@@ -35,7 +35,6 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -334,17 +333,6 @@ public abstract class BaseActivity extends AppCompatActivity implements
         } else {
             Log.w(TAG, "No view with ID main_content to fade in.");
         }
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        switch (id) {
-            case R.id.menu_refresh:
-                requestDataRefresh();
-                break;
-        }
-        return super.onOptionsItemSelected(item);
     }
 
     protected void requestDataRefresh() {

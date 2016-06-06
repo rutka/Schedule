@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 import pl.edu.agh.schedule.CalendarParser;
 import pl.edu.agh.schedule.EventDTO;
@@ -33,13 +34,22 @@ public class ScheduleHelper {
      * Get schedule data for beacon and date
      *
      * @param date of specific day
+     * @param location
      * @return list of schedule items
      */
-    private ArrayList<ScheduleItem> getScheduleData(Date date) {
+    private ArrayList<ScheduleItem> getScheduleData(Date date, String location) {
         try {
-            String beaconId = BeaconUtils.nearestBeacon();
-            Log.v(TAG, "Getting schedules for beacon: " + beaconId + " and date: " + date);
-            List<ScheduleItem> data = toScheduleItems(calendarParser.getEventsByBeaconAndDate(beaconId, date));
+            // TODO check if beacon scan is enabled
+            boolean beaconScanEnabled = false;
+            List<ScheduleItem> data = null;
+            if (beaconScanEnabled) {
+                String beaconId = BeaconUtils.nearestBeacon();
+                Log.v(TAG, "Getting schedules for beacon: " + beaconId + " and date: " + date);
+                data = toScheduleItems(calendarParser.getEventsByBeaconAndDate(beaconId, date));
+            } else {
+                Log.v(TAG, "Getting schedules for location: " + location + " and date: " + date);
+                data = toScheduleItems(calendarParser.getEventsByLocationAndDate(location, date));
+            }
             return ScheduleItemHelper.processItems(data);
         } catch (RuntimeException e) {
             Log.e(TAG, "Exception while getting schedule data.", e);
@@ -66,13 +76,20 @@ public class ScheduleHelper {
         return scheduleItems;
     }
 
-    public void getScheduleDataAsync(final MyScheduleAdapter adapter, Date date) {
-        AsyncTask<Date, Void, ArrayList<ScheduleItem>> task
-                = new AsyncTask<Date, Void, ArrayList<ScheduleItem>>() {
+    public void getScheduleDataAsync(final MyScheduleAdapter adapter, Date date, String location) {
+        AsyncTask<Object, Void, ArrayList<ScheduleItem>> task
+                = new AsyncTask<Object, Void, ArrayList<ScheduleItem>>() {
             @Override
-            protected ArrayList<ScheduleItem> doInBackground(Date... params) {
-                Date date = params[0];
-                return getScheduleData(date);
+            protected ArrayList<ScheduleItem> doInBackground(Object... params) {
+                Date date = null;
+                if (params[0] instanceof Date) {
+                    date = (Date) params[0];
+                }
+                String location = null;
+                if (params[1] instanceof String) {
+                    location = (String) params[1];
+                }
+                return getScheduleData(date, location);
             }
 
             @Override
@@ -84,7 +101,7 @@ public class ScheduleHelper {
         // thread pool instead here, because we want this to be executed independently from other
         // AsyncTasks. See the URL below for detail.
         // http://developer.android.com/reference/android/os/AsyncTask.html#execute(Params...)
-        task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, date);
+        task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, date, location);
     }
 
     public void refreshCalendar() {
@@ -93,5 +110,9 @@ public class ScheduleHelper {
 
     public String getLocationForBeacon(String beaconId) {
         return calendarParser.getLocation(beaconId);
+    }
+
+    public Set<String> getLocations() {
+        return calendarParser.getLocations();
     }
 }
