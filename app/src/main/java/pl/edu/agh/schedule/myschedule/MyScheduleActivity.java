@@ -201,12 +201,15 @@ public class MyScheduleActivity extends BaseActivity implements MyScheduleFragme
                         }
                     }, 100);
         }
-        beaconManager.connect(new BeaconManager.ServiceReadyCallback() {
-            @Override
-            public void onServiceReady() {
-                beaconManager.startRanging(region);
-            }
-        });
+
+        if(getIsScanEnabled(sp)) {
+            beaconManager.connect(new BeaconManager.ServiceReadyCallback() {
+                @Override
+                public void onServiceReady() {
+                    beaconManager.startRanging(region);
+                }
+            });
+        }
     }
 
     private boolean getIsScanEnabled(SharedPreferences sharedPreferences) {
@@ -376,11 +379,18 @@ public class MyScheduleActivity extends BaseActivity implements MyScheduleFragme
         boolean scanEnabled = getIsScanEnabled(sharedPreferences);
         if (scanEnabled != cachedSettingsState) {
             if (scanEnabled) {
-                beaconManager.startRanging(region);
+                beaconManager.connect(new BeaconManager.ServiceReadyCallback() {
+                    @Override
+                    public void onServiceReady() {
+                        beaconManager.startRanging(region);
+                    }
+                });
+
                 location = null;
                 Log.d(TAG, "Start ranging beacons.");
             } else {
-                beaconManager.stopRanging(region);
+                beaconManager.disconnect();
+                BeaconUtils.nearestBeacon("");
                 if (location == null) {
                     setTitle("Offline mode");
                 }
@@ -393,14 +403,15 @@ public class MyScheduleActivity extends BaseActivity implements MyScheduleFragme
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        String newLocation = item.getTitle().toString();
-        location = newLocation;
-        updateData();
-        setTitle(newLocation);
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
         SharedPreferences.Editor editor = sp.edit();
         editor.putBoolean(SettingsActivity.PREF_BEACON_SCAN_ENABLED, false);
         editor.apply();
+        onResume();
+        String newLocation = item.getTitle().toString();
+        location = newLocation;
+        updateData();
+        setTitle(newLocation);
         return super.onOptionsItemSelected(item);
     }
 
