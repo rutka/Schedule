@@ -375,6 +375,11 @@ public class MyScheduleActivity extends BaseActivity implements MyScheduleFragme
 
     @Override
     protected void onResume() {
+        onlineOfflineMode();
+        super.onResume();
+    }
+
+    private void onlineOfflineMode() {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         boolean scanEnabled = getIsScanEnabled(sharedPreferences);
         if (scanEnabled != cachedSettingsState) {
@@ -398,7 +403,6 @@ public class MyScheduleActivity extends BaseActivity implements MyScheduleFragme
             }
             cachedSettingsState = scanEnabled;
         }
-        super.onResume();
     }
 
     @Override
@@ -407,7 +411,7 @@ public class MyScheduleActivity extends BaseActivity implements MyScheduleFragme
         SharedPreferences.Editor editor = sp.edit();
         editor.putBoolean(SettingsActivity.PREF_BEACON_SCAN_ENABLED, false);
         editor.apply();
-        onResume();
+        onlineOfflineMode();
         String newLocation = item.getTitle().toString();
         location = newLocation;
         updateData();
