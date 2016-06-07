@@ -38,7 +38,13 @@ public class EventDTO {
         description = propertiesMap.get("DESCRIPTION");
         try {
             Recur recur = new Recur(rule);
-            DateList dateList = recur.getDates(new DateTime(startTime), new DateTime(startTime), recur.getUntil(), Value.DATE_TIME);
+            net.fortuna.ical4j.model.Date untilDate = recur.getUntil();
+            if (untilDate == null) {
+                org.joda.time.DateTime dateTime = new org.joda.time.DateTime();
+                dateTime = dateTime.plusYears(1);
+                untilDate = new DateTime(dateTime.toDate());
+            }
+            DateList dateList = recur.getDates(new DateTime(startTime), new DateTime(startTime), untilDate, Value.DATE_TIME);
             this.dateList = convert(dateList);
         } catch (ParseException e) {
             e.printStackTrace();
