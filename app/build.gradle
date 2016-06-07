@@ -9,7 +9,7 @@ android {
         minSdkVersion 17
         targetSdkVersion 23
         versionCode 1
-        versionName "1.0.1"
+        versionName "1.0.0"
 
         buildConfigField("String", "SERVER_URL", "\"${url}\"")
         buildConfigField("String", "BEACONS", "\"${beacons_prefix_file_name}\"")
