@@ -23,7 +23,6 @@ public class DownloadTask extends AsyncTask<String, Integer, AsyncTaskResult> {
     private Context context;
 
     public DownloadTask(Context context, String type) {
-
         this.context = context;
         this.type = type;
     }

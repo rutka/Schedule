@@ -261,7 +261,6 @@ public class MyScheduleActivity extends BaseActivity implements MyScheduleFragme
         setTitle(savedInstanceState.getString(TITLE));
         location = savedInstanceState.getString(LOCATION);
         final int day = savedInstanceState.getInt(DAY_INDEX);
-        System.out.println(getDayName(day));
         new Handler().postDelayed(
                 new Runnable() {
                     @Override
@@ -318,7 +317,6 @@ public class MyScheduleActivity extends BaseActivity implements MyScheduleFragme
         int dayIndex = fragment.getArguments().getInt(DAY_INDEX, 0);
         fragment.setListAdapter(mScheduleAdapters[dayIndex]);
         fragment.getListView().setRecyclerListener(mScheduleAdapters[dayIndex]);
-
     }
 
     @Override

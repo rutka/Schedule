@@ -27,7 +27,6 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
-import android.webkit.WebView;
 import android.widget.TextView;
 
 import pl.edu.agh.schedule.R;
@@ -37,71 +36,35 @@ import pl.edu.agh.schedule.R;
  */
 public class AboutUtils {
 
-    public static void showOpenSourceLicenses(Activity activity) {
+    public static void showAuthors(Activity activity) {
         FragmentManager fm = activity.getFragmentManager();
         FragmentTransaction ft = fm.beginTransaction();
-        Fragment prev = fm.findFragmentByTag("dialog_licenses");
+        Fragment prev = fm.findFragmentByTag("dialog_authors");
         if (prev != null) {
             ft.remove(prev);
         }
         ft.addToBackStack(null);
 
-        new OpenSourceLicensesDialog().show(ft, "dialog_licenses");
+        new AuthorsDialog().show(ft, "dialog_authors");
     }
 
-    public static class OpenSourceLicensesDialog extends DialogFragment {
+    public static class AuthorsDialog extends DialogFragment {
 
-        public OpenSourceLicensesDialog() {
-        }
-
-        @Override
-        public Dialog onCreateDialog(Bundle savedInstanceState) {
-            WebView webView = new WebView(getActivity());
-            webView.loadUrl("file:///android_asset/licenses.html");
-
-            return new AlertDialog.Builder(getActivity())
-                    .setTitle(R.string.about_licenses)
-                    .setView(webView)
-                    .setPositiveButton(R.string.ok,
-                            new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int whichButton) {
-                                    dialog.dismiss();
-                                }
-                            }
-                    )
-                    .create();
-        }
-    }
-
-    public static void showEula(Activity activity) {
-        FragmentManager fm = activity.getFragmentManager();
-        FragmentTransaction ft = fm.beginTransaction();
-        Fragment prev = fm.findFragmentByTag("dialog_eula");
-        if (prev != null) {
-            ft.remove(prev);
-        }
-        ft.addToBackStack(null);
-
-        new EulaDialog().show(ft, "dialog_eula");
-    }
-
-    public static class EulaDialog extends DialogFragment {
-
-        public EulaDialog() {
+        public AuthorsDialog() {
         }
 
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {
             int padding = getResources().getDimensionPixelSize(R.dimen.content_padding_dialog);
 
-            TextView eulaTextView = new TextView(getActivity());
-            eulaTextView.setText(Html.fromHtml(getString(R.string.eula_legal_text)));
-            eulaTextView.setMovementMethod(LinkMovementMethod.getInstance());
-            eulaTextView.setPadding(padding, padding, padding, padding);
+            TextView authorsTextView = new TextView(getActivity());
+            authorsTextView.setText(Html.fromHtml(getString(R.string.authors_text)));
+            authorsTextView.setMovementMethod(LinkMovementMethod.getInstance());
+            authorsTextView.setPadding(padding, padding, padding, padding);
 
             return new AlertDialog.Builder(getActivity())
-                    .setTitle(R.string.about_eula)
-                    .setView(eulaTextView)
+                    .setTitle(R.string.about_authors)
+                    .setView(authorsTextView)
                     .setPositiveButton(R.string.ok,
                             new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int whichButton) {

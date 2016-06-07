@@ -38,7 +38,7 @@ public class AboutActivity extends BaseActivity {
         public void onClick(View v) {
             switch (v.getId()) {
                 case R.id.about_authors:
-                    AboutUtils.showEula(AboutActivity.this); //TODO change for authors
+                    AboutUtils.showAuthors(AboutActivity.this);
                     break;
             }
         }
