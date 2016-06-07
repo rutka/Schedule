@@ -50,10 +50,10 @@ import static pl.edu.agh.schedule.util.LogUtils.makeLogTag;
  */
 public class MyScheduleAdapter implements ListAdapter, AbsListView.RecyclerListener {
     private static final String TAG = makeLogTag(MyScheduleAdapter.class);
-    public static final String START_TIME = "START_TIME";
-    public static final String END_TIME = "END_TIME";
-    public static final String TITLE = "TITLE";
-    public static final String DESCRIPTION = "DESCRIPTION";
+    public static final String START_TIME = "pl.edu.agh.schedule.myschedule.START_TIME";
+    public static final String END_TIME = "pl.edu.agh.schedule.myschedule.END_TIME";
+    public static final String TITLE = "pl.edu.agh.schedule.myschedule.TITLE";
+    public static final String DESCRIPTION = "pl.edu.agh.schedule.myschedule.DESCRIPTION";
 
     private final Context mContext;
     private final LUtils mLUtils;

@@ -89,6 +89,7 @@ public class MyScheduleActivity extends BaseActivity implements MyScheduleFragme
     private BeaconManager beaconManager;
     private Region region;
     private String location;
+    private static Boolean cachedSettingsState = null;
 
     @Override
     protected int getSelfNavDrawerItem() {
@@ -97,6 +98,7 @@ public class MyScheduleActivity extends BaseActivity implements MyScheduleFragme
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Log.d(TAG, "onCreate");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_schedule);
         if (mDataHelper == null) {
@@ -161,6 +163,9 @@ public class MyScheduleActivity extends BaseActivity implements MyScheduleFragme
 
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
         sp.registerOnSharedPreferenceChangeListener(this);
+        if (cachedSettingsState == null) {
+            cachedSettingsState = getIsScanEnabled(sp);
+        }
 
         // FIXME adjust settings
         beaconManager = new BeaconManager(this);
@@ -202,6 +207,10 @@ public class MyScheduleActivity extends BaseActivity implements MyScheduleFragme
                 beaconManager.startRanging(region);
             }
         });
+    }
+
+    private boolean getIsScanEnabled(SharedPreferences sharedPreferences) {
+        return sharedPreferences.getBoolean(SettingsActivity.PREF_BEACON_SCAN_ENABLED, true);
     }
 
     private void securelySelectTab(int position) {
@@ -364,12 +373,33 @@ public class MyScheduleActivity extends BaseActivity implements MyScheduleFragme
     }
 
     @Override
+    protected void onResume() {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        boolean scanEnabled = getIsScanEnabled(sharedPreferences);
+        if (scanEnabled != cachedSettingsState) {
+            if (scanEnabled) {
+                beaconManager.startRanging(region);
+                location = null;
+                Log.d(TAG, "Start ranging beacons.");
+            } else {
+                beaconManager.stopRanging(region);
+                if (location == null) {
+                    setTitle("Offline mode");
+                }
+                Log.d(TAG, "Stop ranging beacons.");
+            }
+            cachedSettingsState = scanEnabled;
+        }
+        super.onResume();
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         String newLocation = item.getTitle().toString();
         location = newLocation;
         updateData();
         setTitle(newLocation);
-        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
         SharedPreferences.Editor editor = sp.edit();
         editor.putBoolean(SettingsActivity.PREF_BEACON_SCAN_ENABLED, false);
         editor.apply();
@@ -382,14 +412,6 @@ public class MyScheduleActivity extends BaseActivity implements MyScheduleFragme
             mDataHelper.refreshCalendar();
             Log.d(TAG, "Refreshing calendar.");
             updateData();
-        } else if (key.equals(SettingsActivity.PREF_BEACON_SCAN_ENABLED)) {
-
-            if (sharedPreferences.getBoolean(key, true)) {
-                beaconManager.startRanging(region);
-            } else {
-                beaconManager.stopRanging(region);
-            }
-
         }
     }
 }

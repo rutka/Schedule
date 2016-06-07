@@ -10,10 +10,8 @@ import pl.edu.agh.schedule.R;
 import pl.edu.agh.schedule.model.ScheduleItem;
 import pl.edu.agh.schedule.myschedule.MyScheduleAdapter;
 import pl.edu.agh.schedule.ui.BaseActivity;
-import pl.edu.agh.schedule.util.LogUtils;
 
 public class DetailActivity extends BaseActivity {
-    private static final String TAG = LogUtils.makeLogTag(DetailActivity.class);
 
     private Handler mHandler = new Handler();
     private ScheduleItem details;

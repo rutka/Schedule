@@ -63,16 +63,11 @@ public class SettingsActivity extends BaseActivity {
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
             addPreferencesFromResource(R.xml.settings_prefs);
-
-//            SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getActivity());
-//            sp.registerOnSharedPreferenceChangeListener(new MyScheduleActivity.MyActivity());
         }
 
         @Override
         public void onDestroy() {
             super.onDestroy();
-//            SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getActivity());
-//            sp.unregisterOnSharedPreferenceChangeListener(this);
         }
 
         private void setContentTopClearance(int clearance) {
