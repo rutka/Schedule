@@ -41,7 +41,7 @@ public class EventDTO {
             net.fortuna.ical4j.model.Date untilDate = recur.getUntil();
             if (untilDate == null) {
                 org.joda.time.DateTime dateTime = new org.joda.time.DateTime();
-                dateTime = dateTime.plusYears(1);
+                dateTime = dateTime.plusMonths(1);
                 untilDate = new DateTime(dateTime.toDate());
             }
             DateList dateList = recur.getDates(new DateTime(startTime), new DateTime(startTime), untilDate, Value.DATE_TIME);
